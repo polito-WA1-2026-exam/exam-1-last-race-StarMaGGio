@@ -7,11 +7,8 @@
     border-radius: 0 0 15px 15px;
 
     /* Positioning */
-    position: fixed;
-    top: 0;
     width: 100%;
     height: 15%;
-    z-index: 1030;
 
     /* Flexbox for centering content */
     align-items: center;

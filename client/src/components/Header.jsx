@@ -1,4 +1,5 @@
-import { Navbar, Container } from 'react-bootstrap'
+import { Navbar, Container, Button } from 'react-bootstrap'
+import { PersonFill } from 'react-bootstrap-icons';
 import '../styles/Header.css'
 
 /**
@@ -15,8 +16,17 @@ function Header(props) {
     return(
         <>
             <Navbar className='glass-navbar'>
-                <Container>
-                    <Navbar.Brand className='navbar-title'>Last Race</Navbar.Brand>
+                <Container fluid>
+                    <div>
+                        <Navbar.Brand className='navbar-title'> Last Race </Navbar.Brand>
+                    </div>
+                    <div>
+                        <Button> Play </Button>
+                    </div>
+                    <div>
+                        <Button> Best Scores </Button>
+                        <PersonFill size={24} className="ms-2" />
+                    </div>
                 </Container>
             </Navbar>
         </>
