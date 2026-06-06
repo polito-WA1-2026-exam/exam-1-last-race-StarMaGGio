@@ -1,0 +1,54 @@
+/**
+ * Data Access Object
+ */
+
+import sqlite from 'sqlite3'
+import crypto from 'crypto'
+
+const db = new sqlite.Database("database.db", (err) => {
+    if (err) throw err;
+    else console.log("Database connected successfully") // Keep for debug, remove later
+})
+
+/**
+ * Method to get a user from the database through it's email and password that
+ * will be validated via crypto.script
+ * @param {*} username 
+ * @param {*} password 
+ * @returns a promise with:
+ * - reject(err) if error in connecting to the database or hashing the password
+ * - resolve(false) if username not found in the database or the hashed password do not coincide with the hash in the database
+ * - resolve(user) if the username is fount in the database and the hashed password coincide
+ */
+export const getUser = (username, password) => {
+    return new Promise((resolve, reject) => {
+
+        const query = ` SELECT *
+                        FROM users 
+                        WHERE username = ? `
+        
+        db.get(query, [username], (err, row) => {
+            if (err) return reject(err)                        // DB error
+
+            else if (row == undefined) return resolve(false)   // Username not found in the database
+
+            else {                                      // Username found in the database -> check password
+                // User informations to return
+                const user = {
+                    id: row.id,
+                    username: row.username
+                }
+
+                // Check password validity
+                crypto.scrypt(password, row.salt, 16, function(err, hashedPassword) {
+                    if (err) return reject(err)                // Error in hashing the password
+
+                    if (!crypto.timingSafeEqual(Buffer.from(row.password_hash, "hex"), hashedPassword))
+                        resolve(false)                  // Wrong password
+                    else
+                        resolve(user)                   // Correct password
+                })
+            }
+        })
+    })
+}
