@@ -6,9 +6,23 @@ import SegmentList from './components/SegmentList'
 import StartEndStations from './components/StartEndStations'
 import bgImg from './assets/Background_image_example.png'
 import { Button, Container, Row, Col } from 'react-bootstrap'
-import { Routes, Route, Outlet } from 'react-router'
+import { Routes, Route, Outlet, useNavigate } from 'react-router'
+import { useState } from 'react'
 
 function App() {
+  const navigate = useNavigate()
+
+  const [user, setUser] = useState({id: undefined, username: undefined})
+
+  /**
+   * Function to handle the log in in the client.
+   * Set the current user and redirect to the main page.
+   * @param {*} user 
+   */
+  const doLogin = (user) => {
+    setUser({id: user.id, username: user.username})
+    navigate("/last-race")
+  }
 
   /**
    * Main App component
@@ -23,8 +37,8 @@ function App() {
     }}>
       <Routes>
         <Route path="/" element={<MainLayout/>}>
-          <Route index element={<LoginPage/>}/>
-          <Route path="last-race" element={<GamePage/>}/> {/*TODO: add the component for the game page and other routes for the game phases*/}
+          <Route index element={<LoginPage doLogin={doLogin}/>}/>
+          <Route path="last-race" element={<GamePage/>}/>
           <Route path="game-instructions" element={<GameInstructionsPage/>}/>
           <Route path="best-scores" element={<BestScoresPage/>}/>
         </Route>
@@ -58,7 +72,7 @@ function LoginPage(props) {
   return (
     <>
       <Container fluid className="d-flex flex-column align-items-center justify-content-center border" >
-        <LoginForm/>
+        <LoginForm doLogin={props.doLogin}/>
         <Button className="mt-3"> How to Play </Button>
       </Container>
     </>
