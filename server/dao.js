@@ -4,6 +4,7 @@
 
 import sqlite from 'sqlite3'
 import crypto from 'crypto'
+import { resolve } from 'dns';
 
 const db = new sqlite.Database("database.db", (err) => {
     if (err) throw err;
@@ -25,7 +26,8 @@ export const getUser = (username, password) => {
 
         const query = ` SELECT *
                         FROM users 
-                        WHERE username = ? `
+                        WHERE username = ?
+                        `
         
         db.get(query, [username], (err, row) => {
             if (err) return reject(err)                        // DB error
@@ -50,5 +52,30 @@ export const getUser = (username, password) => {
                 })
             }
         })
+    })
+}
+
+/**
+ * Method to get, from the games table in the database, for each user
+ * who played at least one game, the best score through games he played.
+ * @returns a list of pairs with the user and its best score
+ */
+export const getBestScores = () => {
+    return new Promise((resolve, reject) => {
+
+        const query = ` SELECT 
+                            RANK() OVER (ORDER BY MAX(g.final_score) DESC) AS ranking_position,
+                            u.username,
+                            MAX(g.final_score) as best_score
+                        FROM users u JOIN games g ON u.id = g.user_id
+                        GROUP BY u.id, u.username
+                        ORDER BY best_score DESC;
+                        `
+        db.all(query, (err, rows) => {
+            if (err) return reject(err)
+
+            else resolve(rows)
+        })
+
     })
 }

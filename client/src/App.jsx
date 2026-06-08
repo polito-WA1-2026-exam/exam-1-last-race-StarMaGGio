@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm'
 import NetworkMap from './components/NetworkMap'
 import SegmentList from './components/SegmentList'
 import StartEndStations from './components/StartEndStations'
+import ScoresTable from './components/ScoresTable'
 import bgImg from './assets/Background_image_example.png'
 import { Button, Container, Row, Col } from 'react-bootstrap'
 import { Routes, Route, Outlet, useNavigate } from 'react-router'
@@ -138,7 +139,7 @@ function BestScoresPage(props) {
   return (
     <>
       <Container fluid className="d-flex flex-column align-items-center justify-content-center border" >
-        <span>Best Scores Table bla bla bla ...</span>
+        <ScoresTable/>
         <Button className="mt-3"> Back to the Game </Button>
       </Container>
     </>

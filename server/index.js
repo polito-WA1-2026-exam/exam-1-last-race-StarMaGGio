@@ -4,13 +4,17 @@ import cors from "cors"
 import passport from "passport"
 import LocalStrategy from "passport-local"
 import session from "express-session"
-import { getUser } from "./dao.js"
+import { getUser, getBestScores } from "./dao.js"
 
 const PREFIX = "/api/v1"
 const SECRET_PHRASE = "Santa Claus does not exists"
 
 const NOT_AUTHORIZED_MSG = "Not authorized!"
 const NOT_AUTHENTICATED_MSG = "Not authenticated!"
+
+function internalError(res) {
+    return err => res.status(500).json({"error": err.message})
+}
 
 /* --- SERVER INITIALIZATION AND CONFIGURATION --- */
 
@@ -82,6 +86,22 @@ app.delete(PREFIX + "/sessions/current", (req, res) => {
 })
 
 app.use(isLoggedIn)
+
+/* -  - */
+
+/* - Best Scores - */
+// GET /scores/bests
+app.get(PREFIX + "/scores/bests", async (req, res) => {
+  try {
+    const best_scores = await getBestScores()
+    res.json(best_scores)
+  } catch (err) {
+    console.log(err)
+    internalError(res)
+  }
+})
+
+// POST /scores
 
 /* --- SERVER STARTUP --- */
 
