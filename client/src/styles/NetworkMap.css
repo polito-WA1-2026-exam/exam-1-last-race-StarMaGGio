@@ -1,3 +1,9 @@
 .network-map-container {
-    background-color: aquamarine;
+    
+}
+
+.network-map {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 15px;
 }

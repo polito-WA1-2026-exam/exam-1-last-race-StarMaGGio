@@ -1,5 +1,7 @@
-import { Container } from 'react-bootstrap';
-import '../styles/NetworkMap.css';
+import { Container } from 'react-bootstrap'
+import '../styles/NetworkMap.css'
+import mapWithSegments from '../assets/Network Map with segments.png'
+import mapWithoutSegments from '../assets/Network Map without segments.png'
 
 /**
  * Component to display the network map.
@@ -11,7 +13,7 @@ function NetworkMap(props) {
     return(
         <>
             <Container className='network-map-container'>
-                Here there should be the network map
+                <img src={mapWithSegments} alt="Network Map" className='network-map'/>
             </Container>
         </>
     )

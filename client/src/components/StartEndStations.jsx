@@ -11,7 +11,9 @@ function StartEndStations(props) {
     return (
         <>
             <Container className='start-end-stations-container'>
-                Here there should be the start and end stations of the path that the player has to reconstruct during the game
+                <span className='fs-3'>Start Station</span>
+                <i class="bi bi-arrow-right fs-3"></i>
+                <span className='fs-3'>End Station</span>
             </Container>
         </>
     )

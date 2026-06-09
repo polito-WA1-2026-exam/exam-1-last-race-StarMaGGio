@@ -1,9 +1,7 @@
 .glass-navbar {
-    /* Glassmorphism styles */
-    background: rgba(255, 255, 255, 0.2) !important;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(12px);
+    background: #fef8ee;
     border-bottom: 1px solid rgb(78, 78, 78, 0.2);
+    border-radius: 0 0 15px 15px;
 
     /* Positioning */
     width: 100%;

@@ -5,8 +5,10 @@ import NetworkMap from './components/NetworkMap'
 import SegmentList from './components/SegmentList'
 import StartEndStations from './components/StartEndStations'
 import ScoresTable from './components/ScoresTable'
-import bgImg from './assets/Background_image_example.png'
+import bgImg from './assets/Login background.png'
 import UserContext from './contexts/UserContext.js'
+import './styles/GamePage.css'
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Button, Container, Row, Col } from 'react-bootstrap'
 import { Routes, Route, Outlet, useNavigate, Navigate } from 'react-router'
 import { useState, useContext, useEffect } from 'react'
@@ -19,6 +21,7 @@ function App() {
    * States
    */
   const [user, setUser] = useState({id: undefined, username: undefined})
+  const [coins, setCoins] = useState(20)
 
   /**
    * Try to restore the login session on page reload
@@ -49,23 +52,15 @@ function App() {
    */
   return (
     <UserContext.Provider value={user}>
-      <div style={{ // TODO: make it a react component
-        backgroundImage: `url(${bgImg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        minHeight: '100vh'
-      }}>
-        <Routes>
-          <Route path="/" element={<MainLayout user={user}/>}>
-            <Route index element={<LoginPage doLogin={doLogin}/>}/>
-            <Route path="last-race" element={<GamePage/>}/>
-            <Route path="game-instructions" element={<GameInstructionsPage/>}/>
-            <Route path="best-scores" element={<BestScoresPage/>}/>
-            <Route path="logout" element={<LogoutPage doLogout={doLogout} />} />
-          </Route>
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<MainLayout user={user}/>}>
+          <Route index element={<LoginPage doLogin={doLogin}/>}/>
+          <Route path="last-race" element={<GamePage coins={coins}/>}/>
+          <Route path="game-instructions" element={<GameInstructionsPage/>}/>
+          <Route path="best-scores" element={<BestScoresPage/>}/>
+          <Route path="logout" element={<LogoutPage doLogout={doLogout} />} />
+        </Route>
+      </Routes>
     </UserContext.Provider>
   )
 }
@@ -99,10 +94,18 @@ function LoginPage(props) {
 
   return (
     <>
-      <Container fluid className="d-flex flex-column align-items-center justify-content-center" >
-        <LoginForm doLogin={props.doLogin}/>
-        <Button className="mt-3" onClick={() => navigate("/game-instructions")}> How to Play </Button>
-      </Container>
+      <div style={{ // TODO: make it a react component
+        backgroundImage: `url(${bgImg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        minHeight: '100vh'
+      }}>
+        <Container fluid className="d-flex flex-column align-items-center justify-content-center" >
+          <LoginForm doLogin={props.doLogin}/>
+          <Button className="mt-3" onClick={() => navigate("/game-instructions")}> How to Play </Button>
+        </Container>
+      </div>
     </>
   )
 }
@@ -129,13 +132,17 @@ function LogoutPage(props) {
 function GamePage(props) {
   return (
     <>
-      <Container fluid className="d-flex flex-column border" >
+      <Container fluid className="game-container">
         <Row>
-          <Col xs={11}>
+          <Col>
             <StartEndStations/>
           </Col>
-          <Col xs={1}>
-            <span>Player Coins</span>
+          <Col>
+            {/* TODO: transform coins displayer in a component */}
+            <Container className='d-flex flex-row' style={{background: "#fef8ee", border: "1px solid #c0c0c0", borderRadius: "15px", width: "7vw", "justify-content": "center"}}>
+              <span className='fs-2 me-2'>{props.coins}</span>
+              <i class="bi bi-coin fs-2"></i>
+            </Container>
           </Col>
         </Row>
         <Row>
@@ -161,7 +168,7 @@ function GameInstructionsPage(props) {
 
   return (
     <>
-      <Container fluid className="d-flex flex-column align-items-center justify-content-center border" >
+      <Container fluid className="d-flex flex-column align-items-center justify-content-center" >
         <span>Game Instructions bla bla bla ...</span>
         <Button className="mt-3" onClick={() => navigate("/")}> Back to Login </Button>
       </Container>
@@ -179,7 +186,7 @@ function BestScoresPage(props) {
 
   return (
     <>
-      <Container fluid className="d-flex flex-column align-items-center justify-content-center border" >
+      <Container fluid className="d-flex flex-column align-items-center justify-content-center" >
         <ScoresTable/>
         <Button className="mt-3" onClick={() => navigate("/last-race")}> Back to the Game </Button>
       </Container>

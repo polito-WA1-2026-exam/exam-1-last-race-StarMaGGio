@@ -29,7 +29,7 @@ function Header(props) {
                     <div>
                         {props.user.id !== undefined && <Button onClick={() => navigate("/best-scores")}> Best Scores </Button>}
                         {props.user.id !== undefined && <span>
-                                <PersonFill size={24} className="ms-2" />
+                                <PersonFill size={32} className="ms-2 me-1" />
                                 <Link to='/logout'>Logout</Link>
                         </span>}
                     </div>
