@@ -31,7 +31,7 @@ function LoginForm(props) {
 
     return(
         <>
-            <Container> 
+            <Container className='login-form-container'> 
                 <Form className="login-form" onSubmit={handleSubmit}>
                     {errMsg && <Form.Label className="text-danger">{errMsg}</Form.Label>}
                     <Form.Group>

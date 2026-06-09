@@ -32,7 +32,7 @@ export async function login(username, password) {
  * @returns the logged user if the client is logged in the application, null otherwise
  */
 export async function checkSession() {
-    const response = await fetch(PREFIX + "/session/current", {
+    const response = await fetch(PREFIX + "/sessions/current", {
         credentials: "include"
     })
 

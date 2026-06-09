@@ -1,5 +1,6 @@
 import { Navbar, Container, Button } from 'react-bootstrap'
 import { PersonFill } from 'react-bootstrap-icons';
+import { useNavigate, Link } from 'react-router';
 import '../styles/Header.css'
 
 /**
@@ -13,6 +14,8 @@ import '../styles/Header.css'
  * @param {*} props 
  */
 function Header(props) {
+    const navigate = useNavigate()
+
     return(
         <>
             <Navbar className='glass-navbar'>
@@ -21,11 +24,14 @@ function Header(props) {
                         <Navbar.Brand className='navbar-title'> Last Race </Navbar.Brand>
                     </div>
                     <div>
-                        <Button> Play </Button>
+                        {props.user.id !== undefined && <Button> Play </Button>}
                     </div>
                     <div>
-                        <Button> Best Scores </Button>
-                        <PersonFill size={24} className="ms-2" />
+                        {props.user.id !== undefined && <Button onClick={() => navigate("/best-scores")}> Best Scores </Button>}
+                        {props.user.id !== undefined && <span>
+                                <PersonFill size={24} className="ms-2" />
+                                <Link to='/logout'>Logout</Link>
+                        </span>}
                     </div>
                 </Container>
             </Navbar>

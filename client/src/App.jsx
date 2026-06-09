@@ -6,14 +6,24 @@ import SegmentList from './components/SegmentList'
 import StartEndStations from './components/StartEndStations'
 import ScoresTable from './components/ScoresTable'
 import bgImg from './assets/Background_image_example.png'
+import UserContext from './contexts/UserContext.js'
 import { Button, Container, Row, Col } from 'react-bootstrap'
-import { Routes, Route, Outlet, useNavigate } from 'react-router'
-import { useState } from 'react'
+import { Routes, Route, Outlet, useNavigate, Navigate } from 'react-router'
+import { useState, useContext, useEffect } from 'react'
+import { checkSession, logout } from './api/auth.js'
 
 function App() {
   const navigate = useNavigate()
 
+  /**
+   * States
+   */
   const [user, setUser] = useState({id: undefined, username: undefined})
+
+  /**
+   * Try to restore the login session on page reload
+   */
+  useEffect(() => { checkSession().then(res => { setUser({id: res.id, username: res.username}) }) }, [])
 
   /**
    * Function to handle the log in in the client.
@@ -26,25 +36,37 @@ function App() {
   }
 
   /**
+   * Function to handle the log out in the client.
+   * Set the current user to undefined and redirect to the login page.
+   */
+  const doLogout = () => {
+    setUser({id: undefined, username: undefined})
+    navigate("/")
+  }
+
+  /**
    * Main App component
    */
   return (
-    <div style={{
-      backgroundImage: `url(${bgImg})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
-      minHeight: '100vh'
-    }}>
-      <Routes>
-        <Route path="/" element={<MainLayout/>}>
-          <Route index element={<LoginPage doLogin={doLogin}/>}/>
-          <Route path="last-race" element={<GamePage/>}/>
-          <Route path="game-instructions" element={<GameInstructionsPage/>}/>
-          <Route path="best-scores" element={<BestScoresPage/>}/>
-        </Route>
-      </Routes>
-    </div>
+    <UserContext.Provider value={user}>
+      <div style={{ // TODO: make it a react component
+        backgroundImage: `url(${bgImg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        minHeight: '100vh'
+      }}>
+        <Routes>
+          <Route path="/" element={<MainLayout user={user}/>}>
+            <Route index element={<LoginPage doLogin={doLogin}/>}/>
+            <Route path="last-race" element={<GamePage/>}/>
+            <Route path="game-instructions" element={<GameInstructionsPage/>}/>
+            <Route path="best-scores" element={<BestScoresPage/>}/>
+            <Route path="logout" element={<LogoutPage doLogout={doLogout} />} />
+          </Route>
+        </Routes>
+      </div>
+    </UserContext.Provider>
   )
 }
 
@@ -58,7 +80,7 @@ export default App
 function MainLayout(props) {
   return (
     <>
-      <Header/>
+      <Header user={props.user}/>
       <Outlet/>
     </>
   )
@@ -70,14 +92,29 @@ function MainLayout(props) {
  * @returns The LoginForm if the user is not logged in, otherwise redirects to the main page
  */
 function LoginPage(props) {
+  const navigate = useNavigate()
+
+  const user = useContext(UserContext)
+  if (user.id !== undefined) return <Navigate to={"/last-race"}/>
+
   return (
     <>
-      <Container fluid className="d-flex flex-column align-items-center justify-content-center border" >
+      <Container fluid className="d-flex flex-column align-items-center justify-content-center" >
         <LoginForm doLogin={props.doLogin}/>
-        <Button className="mt-3"> How to Play </Button>
+        <Button className="mt-3" onClick={() => navigate("/game-instructions")}> How to Play </Button>
       </Container>
     </>
   )
+}
+
+/**
+ * Logout Page component for the application
+ * Execute the logout API and the logout function in the client
+ * @param {*} props 
+ */
+function LogoutPage(props) {
+  useEffect(() => { logout().then(() => { props.doLogout() }) }, [])
+  return "Logging out"
 }
 
 /**
@@ -120,11 +157,13 @@ function GamePage(props) {
  * @param {*} props 
  */
 function GameInstructionsPage(props) {
+  const navigate = useNavigate()
+
   return (
     <>
       <Container fluid className="d-flex flex-column align-items-center justify-content-center border" >
         <span>Game Instructions bla bla bla ...</span>
-        <Button className="mt-3"> Back to Login </Button>
+        <Button className="mt-3" onClick={() => navigate("/")}> Back to Login </Button>
       </Container>
     </>
   )
@@ -136,11 +175,13 @@ function GameInstructionsPage(props) {
  * @param {*} props
  */
 function BestScoresPage(props) {
+  const navigate = useNavigate()
+
   return (
     <>
       <Container fluid className="d-flex flex-column align-items-center justify-content-center border" >
         <ScoresTable/>
-        <Button className="mt-3"> Back to the Game </Button>
+        <Button className="mt-3" onClick={() => navigate("/last-race")}> Back to the Game </Button>
       </Container>
     </>
   )
