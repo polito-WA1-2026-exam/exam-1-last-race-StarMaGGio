@@ -79,3 +79,33 @@ export const getBestScores = () => {
 
     })
 }
+
+/**
+ * Method to get from the database the list of segments that connect
+ * all the stations of the network map
+ * @returns the names of the two stations and the color of the line of the segment
+ */
+export const getSegments = () => {
+    return new Promise((resolve, reject) => {
+
+        const query = ` SELECT 
+                            s1.name AS nameS1, 
+                            s2.name AS nameS2, 
+                            l.color AS lineColor
+                        FROM 
+                            segments seg
+                        JOIN 
+                            stations s1 ON seg.station_id_1 = s1.id
+                        JOIN 
+                            stations s2 ON seg.station_id_2 = s2.id
+                        JOIN 
+                            lines l ON seg.line_id = l.id;
+                        `
+
+        db.all(query, (err, rows) => {
+            if (err) return reject(err)
+            
+            else resolve(rows)
+        })
+    })
+}

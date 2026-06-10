@@ -4,7 +4,7 @@ import cors from "cors"
 import passport from "passport"
 import LocalStrategy from "passport-local"
 import session from "express-session"
-import { getUser, getBestScores } from "./dao.js"
+import { getUser, getBestScores, getSegments } from "./dao.js"
 
 const PREFIX = "/api/v1"
 const SECRET_PHRASE = "Santa Claus does not exists"
@@ -102,6 +102,19 @@ app.get(PREFIX + "/scores/bests", async (req, res) => {
 })
 
 // POST /scores
+// TODO ...
+
+/* - Stations and Segments */
+// GET /network/segments
+app.get(PREFIX + "/network/segments", async (req, res) => {
+  try {
+    const segments = await getSegments()
+    res.json(segments)
+  } catch (err) {
+    console.log(err)
+    internalError(res)
+  }
+})
 
 /* --- SERVER STARTUP --- */
 

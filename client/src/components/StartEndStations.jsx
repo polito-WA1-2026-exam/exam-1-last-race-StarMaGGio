@@ -12,7 +12,7 @@ function StartEndStations(props) {
         <>
             <Container className='start-end-stations-container'>
                 <span className='fs-3'>Start Station</span>
-                <i class="bi bi-arrow-right fs-3"></i>
+                <i className="bi bi-arrow-right fs-3"></i>
                 <span className='fs-3'>End Station</span>
             </Container>
         </>

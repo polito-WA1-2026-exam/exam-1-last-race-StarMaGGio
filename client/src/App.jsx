@@ -13,6 +13,7 @@ import { Button, Container, Row, Col } from 'react-bootstrap'
 import { Routes, Route, Outlet, useNavigate, Navigate } from 'react-router'
 import { useState, useContext, useEffect } from 'react'
 import { checkSession, logout } from './api/auth.js'
+import { getSegments } from './api/network.js'
 
 function App() {
   const navigate = useNavigate()
@@ -130,6 +131,14 @@ function LogoutPage(props) {
  * @param {*} props 
  */
 function GamePage(props) {
+  const user = useContext(UserContext)
+  if (user.id == undefined) return <Navigate to={"/"}/>
+
+  // FETCH SEGMENTS HERE -> MAY BE MOVED IN FUTURE
+  // SEGMENTS MUST BE FETCHED/DISPLAYED ONLY WHEN IN "PLANNING" PHASE
+  const [segments, setSegments] = useState([])
+  useEffect(() => { getSegments().then((res) => setSegments(res))}, [])
+  
   return (
     <>
       <Container fluid className="game-container">
@@ -150,7 +159,7 @@ function GamePage(props) {
             <NetworkMap/>
           </Col>
           <Col xs={4}>
-            <SegmentList/>
+            <SegmentList segments={segments}/>
           </Col>
         </Row>
       </Container>

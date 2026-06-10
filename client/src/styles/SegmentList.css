@@ -1,3 +1,18 @@
 .segment-list-container {
-    background-color: #efa612;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.segment-container {
+    gap: 10px;
+    display: flex;
+
+    width: 80%;
+    padding: 10px;
+    
+    border: 3px solid var(--segment-border-color, #ccc);
+    border-radius: 15px;
+    background-color: #f9f9f9;
 }
