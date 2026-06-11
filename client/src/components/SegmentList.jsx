@@ -1,4 +1,5 @@
 import { Container } from 'react-bootstrap';
+import { GamePhases } from '../models/gamePhases';
 import '../styles/SegmentList.css';
 
 /**
@@ -11,7 +12,7 @@ function SegmentList(props) {
     return(
         <>
             <Container className='segment-list-container'>
-                {props.segments.map((s) => (
+                {props.gamePhase !== GamePhases.SETUP && props.segments.map((s) => (
                     <Segment nameS1={s.nameS1} nameS2={s.nameS2} lineColor={s.lineColor}/>
                 ))}
             </Container>

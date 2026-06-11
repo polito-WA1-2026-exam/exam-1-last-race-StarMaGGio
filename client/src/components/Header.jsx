@@ -1,6 +1,7 @@
 import { Navbar, Container, Button } from 'react-bootstrap'
 import { PersonFill } from 'react-bootstrap-icons';
-import { useNavigate, Link } from 'react-router';
+import { useNavigate, Link, useLocation } from 'react-router';
+import { GamePhases } from '../models/gamePhases';
 import '../styles/Header.css'
 
 /**
@@ -15,6 +16,7 @@ import '../styles/Header.css'
  */
 function Header(props) {
     const navigate = useNavigate()
+    const location = useLocation()
 
     return(
         <>
@@ -24,10 +26,26 @@ function Header(props) {
                         <Navbar.Brand className='navbar-title'> Last Race </Navbar.Brand>
                     </div>
                     <div>
-                        {props.user.id !== undefined && <Button> Play </Button>}
+                        {props.user.id !== undefined
+                        && location.pathname !== '/best-scores'
+                        && (props.gamePhase == GamePhases.SETUP || props.gamePhase == GamePhases.RESULT)
+                        && <Button 
+                                onClick={() => {
+                                    if (props.gamePhase === GamePhases.SETUP) props.startPlanningPhase()
+                                    else if (props.gamePhase === GamePhases.RESULT) props.playAgain()
+                                }}
+                            >
+                                {props.gamePhase === GamePhases.SETUP ? "Play" : "Play Again"}
+                            </Button>}
                     </div>
                     <div>
-                        {props.user.id !== undefined && <Button onClick={() => navigate("/best-scores")}> Best Scores </Button>}
+                        {props.user.id !== undefined && <Button 
+                                                            onClick={() => navigate("/best-scores")}
+                                                            disabled={props.gamePhase !== GamePhases.SETUP && props.gamePhase !== GamePhases.RESULT}
+                                                        > 
+                                                            Best Scores 
+                                                        </Button>}
+
                         {props.user.id !== undefined && <span>
                                 <PersonFill size={32} className="ms-2 me-1" />
                                 <Link to='/logout'>Logout</Link>

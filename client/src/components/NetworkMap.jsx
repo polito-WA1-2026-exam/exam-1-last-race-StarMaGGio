@@ -2,6 +2,7 @@ import { Container } from 'react-bootstrap'
 import '../styles/NetworkMap.css'
 import mapWithSegments from '../assets/Network Map with segments.png'
 import mapWithoutSegments from '../assets/Network Map without segments.png'
+import { GamePhases } from '../models/gamePhases'
 
 /**
  * Component to display the network map.
@@ -13,7 +14,8 @@ function NetworkMap(props) {
     return(
         <>
             <Container className='network-map-container'>
-                <img src={mapWithSegments} alt="Network Map" className='network-map'/>
+                {props.gamePhase == GamePhases.SETUP && <img src={mapWithSegments} alt="Network Map" className='network-map'/>}
+                {props.gamePhase == GamePhases.PLANNING && <img src={mapWithoutSegments} alt="Network Map" className='network-map'/>}
             </Container>
         </>
     )

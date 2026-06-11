@@ -7,6 +7,7 @@ import StartEndStations from './components/StartEndStations'
 import ScoresTable from './components/ScoresTable'
 import bgImg from './assets/Login background.png'
 import UserContext from './contexts/UserContext.js'
+import { GamePhases } from './models/gamePhases.js'
 import './styles/GamePage.css'
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Button, Container, Row, Col } from 'react-bootstrap'
@@ -23,6 +24,7 @@ function App() {
    */
   const [user, setUser] = useState({id: undefined, username: undefined})
   const [coins, setCoins] = useState(20)
+  const [gamePhase, setGamePhase] = useState(GamePhases.SETUP)
 
   /**
    * Try to restore the login session on page reload
@@ -49,14 +51,32 @@ function App() {
   }
 
   /**
+   * Function that set the game phase to PLANNING
+   * starts a timeout of 90 seconds ...
+   */
+  const startPlanningPhase = () => {
+    setGamePhase(GamePhases.PLANNING)
+
+    setTimeout(() => {
+      setGamePhase(GamePhases.RESULT)
+    }, 3000) // For now is 3 seconds for debug
+  }
+  
+  const playAgain = () => {
+    setGamePhase(GamePhases.SETUP)
+
+    // Do other things like restore coins ecc...
+  }
+
+  /**
    * Main App component
    */
   return (
     <UserContext.Provider value={user}>
       <Routes>
-        <Route path="/" element={<MainLayout user={user}/>}>
+        <Route path="/" element={<MainLayout user={user} gamePhase={gamePhase} startPlanningPhase={startPlanningPhase} playAgain={playAgain}/>}>
           <Route index element={<LoginPage doLogin={doLogin}/>}/>
-          <Route path="last-race" element={<GamePage coins={coins}/>}/>
+          <Route path="last-race" element={<GamePage coins={coins} gamePhase={gamePhase}/>}/>
           <Route path="game-instructions" element={<GameInstructionsPage/>}/>
           <Route path="best-scores" element={<BestScoresPage/>}/>
           <Route path="logout" element={<LogoutPage doLogout={doLogout} />} />
@@ -76,7 +96,10 @@ export default App
 function MainLayout(props) {
   return (
     <>
-      <Header user={props.user}/>
+      <Header user={props.user}
+              gamePhase={props.gamePhase}
+              startPlanningPhase={props.startPlanningPhase}
+              playAgain={props.playAgain}/>
       <Outlet/>
     </>
   )
@@ -156,10 +179,10 @@ function GamePage(props) {
         </Row>
         <Row>
           <Col xs={8}>
-            <NetworkMap/>
+            <NetworkMap gamePhase={props.gamePhase}/>
           </Col>
           <Col xs={4}>
-            <SegmentList segments={segments}/>
+            <SegmentList segments={segments} gamePhase={props.gamePhase}/>
           </Col>
         </Row>
       </Container>
