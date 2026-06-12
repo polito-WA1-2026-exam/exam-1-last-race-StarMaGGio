@@ -25,6 +25,7 @@ function App() {
   const [user, setUser] = useState({id: undefined, username: undefined})
   const [coins, setCoins] = useState(20)
   const [gamePhase, setGamePhase] = useState(GamePhases.SETUP)
+  const [selectedSegments, setSelectedSegments] = useState([])
 
   /**
    * Try to restore the login session on page reload
@@ -63,10 +64,14 @@ function App() {
 
   const startExecutionPhase = () => {
     setGamePhase(GamePhases.EXECUTION)
+
+    // Do other things like sending selected segments to backend ecc...
   }
 
   const showResult = () => {
     setGamePhase(GamePhases.RESULT)
+
+    // Do other things like show result and save in games table ecc...
   }
   
   const playAgain = () => {
@@ -81,13 +86,20 @@ function App() {
   return (
     <UserContext.Provider value={user}>
       <Routes>
-        <Route path="/" element={<MainLayout user={user}
-                                              gamePhase={gamePhase} 
-                                              startPlanningPhase={startPlanningPhase} 
-                                              startExecutionPhase={startExecutionPhase}
-                                              playAgain={playAgain}/>}>
+        <Route path="/" element={<MainLayout
+                                    user={user}
+                                    gamePhase={gamePhase} 
+                                    startPlanningPhase={startPlanningPhase} 
+                                    startExecutionPhase={startExecutionPhase}
+                                    playAgain={playAgain}
+                                  />}>
           <Route index element={<LoginPage doLogin={doLogin}/>}/>
-          <Route path="last-race" element={<GamePage coins={coins} gamePhase={gamePhase}/>}/>
+          <Route path="last-race" element={<GamePage
+                                              coins={coins}
+                                              gamePhase={gamePhase}
+                                              selectedSegments={selectedSegments}
+                                              setSelectedSegments={setSelectedSegments}
+                                            />}/>
           <Route path="game-instructions" element={<GameInstructionsPage/>}/>
           <Route path="best-scores" element={<BestScoresPage/>}/>
           <Route path="logout" element={<LogoutPage doLogout={doLogout} />} />
@@ -191,9 +203,11 @@ function GamePage(props) {
       <Container fluid className="game-container">
         <Row>
           <Col>
-            <StartEndStations startStation={startStation}
-                              endStation={endStation}
-                              gamePhase={props.gamePhase}/>
+            <StartEndStations
+                startStation={startStation}
+                endStation={endStation}
+                gamePhase={props.gamePhase}
+            />
           </Col>
           <Col>
             {/* TODO: transform coins displayer in a component */}
@@ -208,7 +222,12 @@ function GamePage(props) {
             <NetworkMap gamePhase={props.gamePhase}/>
           </Col>
           <Col xs={4}>
-            <SegmentList segments={segments} gamePhase={props.gamePhase}/>
+            <SegmentList
+                segments={segments}
+                gamePhase={props.gamePhase} 
+                selectedSegments={props.selectedSegments}
+                setSelectedSegments={props.setSelectedSegments}
+            />
           </Col>
         </Row>
       </Container>
