@@ -50,16 +50,23 @@ function App() {
     navigate("/")
   }
 
+  /* --- Functions to move between game phases --- 
+  *   Setup -> Planning -> Execution -> Result
+  */
+
   /**
    * Function that set the game phase to PLANNING
-   * starts a timeout of 90 seconds ...
    */
   const startPlanningPhase = () => {
     setGamePhase(GamePhases.PLANNING)
+  }
 
-    setTimeout(() => {
-      setGamePhase(GamePhases.RESULT)
-    }, 3000) // For now is 3 seconds for debug
+  const startExecutionPhase = () => {
+    setGamePhase(GamePhases.EXECUTION)
+  }
+
+  const showResult = () => {
+    setGamePhase(GamePhases.RESULT)
   }
   
   const playAgain = () => {
@@ -74,7 +81,11 @@ function App() {
   return (
     <UserContext.Provider value={user}>
       <Routes>
-        <Route path="/" element={<MainLayout user={user} gamePhase={gamePhase} startPlanningPhase={startPlanningPhase} playAgain={playAgain}/>}>
+        <Route path="/" element={<MainLayout user={user}
+                                              gamePhase={gamePhase} 
+                                              startPlanningPhase={startPlanningPhase} 
+                                              startExecutionPhase={startExecutionPhase}
+                                              playAgain={playAgain}/>}>
           <Route index element={<LoginPage doLogin={doLogin}/>}/>
           <Route path="last-race" element={<GamePage coins={coins} gamePhase={gamePhase}/>}/>
           <Route path="game-instructions" element={<GameInstructionsPage/>}/>
@@ -99,6 +110,7 @@ function MainLayout(props) {
       <Header user={props.user}
               gamePhase={props.gamePhase}
               startPlanningPhase={props.startPlanningPhase}
+              startExecutionPhase={props.startExecutionPhase}
               playAgain={props.playAgain}/>
       <Outlet/>
     </>

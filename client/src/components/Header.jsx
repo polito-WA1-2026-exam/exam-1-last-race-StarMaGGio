@@ -1,6 +1,7 @@
 import { Navbar, Container, Button } from 'react-bootstrap'
 import { PersonFill } from 'react-bootstrap-icons';
 import { useNavigate, Link, useLocation } from 'react-router';
+import GameTimer from './GameTimer'
 import { GamePhases } from '../models/gamePhases';
 import '../styles/Header.css'
 
@@ -37,6 +38,8 @@ function Header(props) {
                             >
                                 {props.gamePhase === GamePhases.SETUP ? "Play" : "Play Again"}
                             </Button>}
+                        {props.gamePhase == GamePhases.PLANNING
+                        && <GameTimer onTimeUp={props.startExecutionPhase} gamePhase={props.gamePhase}/>}
                     </div>
                     <div>
                         {props.user.id !== undefined && <Button 
