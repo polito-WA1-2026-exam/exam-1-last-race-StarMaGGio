@@ -80,6 +80,21 @@ export const getBestScores = () => {
     })
 }
 
+export const getStations = () => {
+    return new Promise((resolve, reject) => {
+        
+        const query = ` SELECT id, name
+                        FROM stations
+                        `
+
+        db.all(query, (err, rows) => {
+            if (err) return reject(err)
+
+            else resolve(rows)
+        })
+    })
+}
+
 /**
  * Method to get from the database the list of segments that connect
  * all the stations of the network map
@@ -109,3 +124,38 @@ export const getSegments = () => {
         })
     })
 }
+
+export const getSegmentsStationIds = () => {
+    return new Promise((resolve, reject) => {
+        const query = ` SELECT station_id_1, station_id_2
+                        FROM segments
+                        `
+
+        db.all(query, (err, rows) => {
+            if (err) return reject(err)
+            
+            else resolve(rows)
+        })
+    })
+}
+
+/**
+ * Function to get a random station from the stations in the database
+ * @return the id and the name of the station
+ */
+/*
+export const getRandomStation = () => {
+    return new Promise((resolve, reject) => {
+        const query = ` SELECT *
+                        FROM stations
+                        ORDER BY RANDOM() LIMIT 1;
+                        `
+        
+        db.get(query, (err, row) => {
+            if (err) return reject(err)
+
+            else resolve(row)
+        })
+    })
+}
+*/

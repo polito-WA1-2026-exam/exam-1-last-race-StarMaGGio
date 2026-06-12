@@ -1,4 +1,5 @@
 import { Container } from 'react-bootstrap';
+import { GamePhases } from '../models/gamePhases';
 import '../styles/StartEndStations.css';
 
 /**
@@ -11,9 +12,11 @@ function StartEndStations(props) {
     return (
         <>
             <Container className='start-end-stations-container'>
-                <span className='fs-3'>Start Station</span>
-                <i className="bi bi-arrow-right fs-3"></i>
-                <span className='fs-3'>End Station</span>
+                {props.gamePhase != GamePhases.SETUP && <>
+                    <span className='fs-3'>{props.startStation.name}</span>
+                    <i className="bi bi-arrow-right fs-3"></i>
+                    <span className='fs-3'>{props.endStation.name}</span></>
+                }
             </Container>
         </>
     )

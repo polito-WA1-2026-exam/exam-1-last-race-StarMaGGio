@@ -4,7 +4,8 @@ import cors from "cors"
 import passport from "passport"
 import LocalStrategy from "passport-local"
 import session from "express-session"
-import { getUser, getBestScores, getSegments } from "./dao.js"
+import { getUser, getBestScores, getSegments, getStations, getSegmentsStationIds } from "./dao.js"
+import { NetworkMap } from "./models/NetworkMap.js"
 
 const PREFIX = "/api/v1"
 const SECRET_PHRASE = "Santa Claus does not exists"
@@ -15,6 +16,12 @@ const NOT_AUTHENTICATED_MSG = "Not authenticated!"
 function internalError(res) {
     return err => res.status(500).json({"error": err.message})
 }
+
+/* --- OBJECTS --- */
+// Initialize network map in the backend from the database
+const stationsData = await getStations()
+const segmentsData = await getSegmentsStationIds()
+const networkMap = new NetworkMap(stationsData, segmentsData)
 
 /* --- SERVER INITIALIZATION AND CONFIGURATION --- */
 
@@ -87,6 +94,29 @@ app.delete(PREFIX + "/sessions/current", (req, res) => {
 
 app.use(isLoggedIn)
 
+/* - Stations and Segments */
+// GET /network/segments
+app.get(PREFIX + "/network/segments", async (req, res) => {
+  try {
+    const segments = await getSegments()
+    res.json(segments)
+  } catch (err) {
+    console.log(err)
+    internalError(res)
+  }
+})
+
+// GET /network/stations/random-start-end
+app.get(PREFIX + "/network/stations/random-start-end", async (req, res) => {
+  try {
+    const station = networkMap.getRandomStartEndStations(4)
+    res.json(station)
+  } catch (err) {
+    console.log(err)
+    internalError(res)
+  }
+})
+
 /* -  - */
 
 /* - Best Scores - */
@@ -103,18 +133,6 @@ app.get(PREFIX + "/scores/bests", async (req, res) => {
 
 // POST /scores
 // TODO ...
-
-/* - Stations and Segments */
-// GET /network/segments
-app.get(PREFIX + "/network/segments", async (req, res) => {
-  try {
-    const segments = await getSegments()
-    res.json(segments)
-  } catch (err) {
-    console.log(err)
-    internalError(res)
-  }
-})
 
 /* --- SERVER STARTUP --- */
 

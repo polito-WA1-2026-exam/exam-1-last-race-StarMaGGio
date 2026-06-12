@@ -15,3 +15,19 @@ export async function getSegments() {
         throw new Error("Network Error", {cause: ex})
     }
 }
+
+export async function getRandomStartEndStations() {
+    try {
+        const response = await fetch(PREFIX + "/network/stations/random-start-end", {
+            method: "GET",
+            credentials: "include"
+        })
+
+        if (response.ok) {
+            const start_end = await response.json()
+            return start_end
+        } else throw new Error("HTTP error in getRandomStartEndStations, code = " + response.status)
+    } catch (err) {
+        throw new Error("Network Error", {cause: ex})
+    }
+}

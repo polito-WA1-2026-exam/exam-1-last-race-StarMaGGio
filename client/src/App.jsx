@@ -14,7 +14,7 @@ import { Button, Container, Row, Col } from 'react-bootstrap'
 import { Routes, Route, Outlet, useNavigate, Navigate } from 'react-router'
 import { useState, useContext, useEffect } from 'react'
 import { checkSession, logout } from './api/auth.js'
-import { getSegments } from './api/network.js'
+import { getSegments, getRandomStartEndStations } from './api/network.js'
 
 function App() {
   const navigate = useNavigate()
@@ -157,17 +157,31 @@ function GamePage(props) {
   const user = useContext(UserContext)
   if (user.id == undefined) return <Navigate to={"/"}/>
 
-  // FETCH SEGMENTS HERE -> MAY BE MOVED IN FUTURE
-  // SEGMENTS MUST BE FETCHED/DISPLAYED ONLY WHEN IN "PLANNING" PHASE
+  const [startStation, setStartStation] = useState({id: null, name: null})
+  const [endStation, setEndStation] = useState({id: null, name: null})
   const [segments, setSegments] = useState([])
+
+  // Fetch segments at page load
   useEffect(() => { getSegments().then((res) => setSegments(res))}, [])
+
+  // Fetch random start-end stations when gamePhase switch to PLANNING
+  useEffect(() => {
+    if (props.gamePhase === GamePhases.PLANNING) {
+      getRandomStartEndStations().then((res) => {
+        setStartStation(res.startStation)
+        setEndStation(res.endStation)
+      })
+    }
+  }, [props.gamePhase])
   
   return (
     <>
       <Container fluid className="game-container">
         <Row>
           <Col>
-            <StartEndStations/>
+            <StartEndStations startStation={startStation}
+                              endStation={endStation}
+                              gamePhase={props.gamePhase}/>
           </Col>
           <Col>
             {/* TODO: transform coins displayer in a component */}
