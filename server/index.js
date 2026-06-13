@@ -17,11 +17,100 @@ function internalError(res) {
     return err => res.status(500).json({"error": err.message})
 }
 
-/* --- OBJECTS --- */
+/* --- OBJECTS AND FUNCTIONS --- */
 // Initialize network map in the backend from the database
 const stationsData = await getStations()
 const segmentsData = await getSegmentsStationIds()
 const networkMap = new NetworkMap(stationsData, segmentsData)
+
+/**
+ * Function to validate the route sent by the frontend.
+ * It construct a route-graph exclusively with segments sent by the frontend,
+ * then explores it with BFS algorithm from the startStation to check if
+ * the route reach the endStation
+ * @param {int} startStationId 
+ * @param {int} endStationId 
+ * @param {*} selectedSegments Array of stationIds pairs (idS1, idS2)
+ * @returns an object with: isValid= bool, reason= string, numSegments= int/undefined
+ */
+function validatePlayerRoute(startStationId, endStationId, selectedSegments) {
+  const routeGraph = {}
+
+  // 1. Build the route graph
+  for (const segment of selectedSegments) {
+    const nodeA = segment.idS1
+    const nodeB = segment.idS2
+
+    // Add the node to the graph if not already present and initialize an empty list of adiacent stations
+    if (!routeGraph[nodeA]) routeGraph[nodeA] = []
+    if (!routeGraph[nodeB]) routeGraph[nodeB] = []
+
+    // Add the connection in both directions
+    routeGraph[nodeA].push(nodeB)
+    routeGraph[nodeB].push(nodeA)
+  }
+
+  // 2. Preliminary validations
+  if(!routeGraph[startStationId] || !routeGraph[endStationId]) {
+    return {
+      isValid: false,
+      reason: "Start Station and/or End Station are not in the submitted route!"
+    }
+  }
+
+  // 3. BFS algorithm to explore the route graph
+  const visited = new Set()
+  const queue = [startStationId]
+  visited.add(startStationId)
+
+  let reachedEndStation = false;
+
+  while (queue.length > 0) {
+    // Take the head element of the queue
+    const currentNodeId = queue.shift()
+
+    if (currentNodeId === endStationId) {
+      reachedEndStation = true
+      // NO break here -> finish visit all the graph to anti-cheat check later
+    }
+
+    // Add current station neighbors to the queue (if they have not been already visited)
+    const neighborIds = routeGraph[currentNodeId] || []
+    for (const neighborId of neighborIds) {
+      if (!visited.has(neighborId)) {
+        visited.add(neighborId)
+        queue.push(neighborId)
+      }
+    }
+  }
+
+  // 4. Return if endStation is not reached
+  if (!reachedEndStation) {
+    return {
+      isValid: false,
+      reason: "Destination not reached!"
+    }
+  }
+
+  // 5. Anti-cheat check
+  // Check if there are extra segments in the submitted route
+  // by checking if in the route graph there are nodes that have not been visited by the BFS.
+  for (const node in routeGraph) {
+    if (!visited.has(Number(node))) {
+      return {
+        isValid: false,
+        reason: "Extra segments have been selected!"
+      }
+    }
+  }
+
+  // 6. All validations have passed
+  return {
+    isValid: true,
+    reason: "The route successfully reach the destination!",
+    numSegments: selectedSegments.length
+  }
+}
 
 /* --- SERVER INITIALIZATION AND CONFIGURATION --- */
 
@@ -117,7 +206,36 @@ app.get(PREFIX + "/network/stations/random-start-end", async (req, res) => {
   }
 })
 
-/* -  - */
+/* - Game - */
+// POST /game/validate-path
+app.post(PREFIX + "/game/validate-path", async (req, res) => {
+  // TODO: maybe add body validation
+  try {
+    // Extract body data
+    const { startStationId, endStationId, selectedSegments } = req.body;
+
+    // Validate route
+    const result = validatePlayerRoute(startStationId, endStationId, selectedSegments)
+
+    // Response for the backend
+    if (result.isValid) {
+      // --- HERE take n random events to return to the frontend ---
+      return res.status(200).json({
+        success: true,
+        message: result.reason,
+        events: result.numSegments
+      })
+    } else {
+      return res.status(200).json({
+        success: false,
+        message: result.reason
+      })
+    }
+  } catch (err) {
+    console.log(err)
+    internalError(res)
+  }
+})
 
 /* - Best Scores - */
 // GET /scores/bests
