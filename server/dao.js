@@ -98,14 +98,16 @@ export const getStations = () => {
 /**
  * Method to get from the database the list of segments that connect
  * all the stations of the network map
- * @returns the names of the two stations and the color of the line of the segment
+ * @returns the names and ids of the two stations and the color of the line of the segment
  */
 export const getSegments = () => {
     return new Promise((resolve, reject) => {
 
         const query = ` SELECT 
                             s1.name AS nameS1, 
-                            s2.name AS nameS2, 
+                            s2.name AS nameS2,
+                            s1.id AS idS1,
+                            s2.id AS idS2,
                             l.color AS lineColor
                         FROM 
                             segments seg

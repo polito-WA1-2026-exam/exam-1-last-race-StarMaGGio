@@ -15,17 +15,22 @@ import { Routes, Route, Outlet, useNavigate, Navigate } from 'react-router'
 import { useState, useContext, useEffect } from 'react'
 import { checkSession, logout } from './api/auth.js'
 import { getSegments, getRandomStartEndStations } from './api/network.js'
+import { sendRouteForValidation } from './api/game.js'
 
 function App() {
   const navigate = useNavigate()
 
   /**
-   * States
+   * --- States ---
    */
   const [user, setUser] = useState({id: undefined, username: undefined})
   const [coins, setCoins] = useState(20)
   const [gamePhase, setGamePhase] = useState(GamePhases.SETUP)
-  const [selectedSegments, setSelectedSegments] = useState([])
+  
+
+  /**
+   * --- Functions to manage user login, logout and session ---
+   */
 
   /**
    * Try to restore the login session on page reload
@@ -97,8 +102,7 @@ function App() {
           <Route path="last-race" element={<GamePage
                                               coins={coins}
                                               gamePhase={gamePhase}
-                                              selectedSegments={selectedSegments}
-                                              setSelectedSegments={setSelectedSegments}
+                                              startExecutionPhase={startExecutionPhase}
                                             />}/>
           <Route path="game-instructions" element={<GameInstructionsPage/>}/>
           <Route path="best-scores" element={<BestScoresPage/>}/>
@@ -110,6 +114,10 @@ function App() {
 }
 
 export default App
+
+/**
+ * --- Pages (to be moved to relative files) ---
+ */
 
 /**
  * Main layout component for the application
@@ -184,6 +192,7 @@ function GamePage(props) {
   const [startStation, setStartStation] = useState({id: null, name: null})
   const [endStation, setEndStation] = useState({id: null, name: null})
   const [segments, setSegments] = useState([])
+  const [selectedSegments, setSelectedSegments] = useState([])
 
   // Fetch segments at page load
   useEffect(() => { getSegments().then((res) => setSegments(res))}, [])
@@ -197,6 +206,13 @@ function GamePage(props) {
       })
     }
   }, [props.gamePhase])
+
+  // Execute the sendRouteForValidation API with the selected segments when gamePhase switch to EXECUTION
+  useEffect(() => {
+    if (props.gamePhase === GamePhases.EXECUTION) {
+      sendRouteForValidation(startStation, endStation, selectedSegments).then((res) => {console.log(res)})
+    }
+  }, [props.gamePhase])
   
   return (
     <>
@@ -208,6 +224,11 @@ function GamePage(props) {
                 endStation={endStation}
                 gamePhase={props.gamePhase}
             />
+          </Col>
+          <Col>
+            {props.gamePhase === GamePhases.PLANNING && <Button onClick={() => {props.startExecutionPhase()}}>
+              Submit Route
+            </Button>}
           </Col>
           <Col>
             {/* TODO: transform coins displayer in a component */}
@@ -225,8 +246,8 @@ function GamePage(props) {
             <SegmentList
                 segments={segments}
                 gamePhase={props.gamePhase} 
-                selectedSegments={props.selectedSegments}
-                setSelectedSegments={props.setSelectedSegments}
+                selectedSegments={selectedSegments}
+                setSelectedSegments={setSelectedSegments}
             />
           </Col>
         </Row>

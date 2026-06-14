@@ -212,10 +212,10 @@ app.post(PREFIX + "/game/validate-path", async (req, res) => {
   // TODO: maybe add body validation
   try {
     // Extract body data
-    const { startStationId, endStationId, selectedSegments } = req.body;
+    const { startStation, endStation, selectedSegments } = req.body;
 
-    // Validate route
-    const result = validatePlayerRoute(startStationId, endStationId, selectedSegments)
+    // Validate routeS
+    const result = validatePlayerRoute(startStation.id, endStation.id, selectedSegments)
 
     // Response for the backend
     if (result.isValid) {

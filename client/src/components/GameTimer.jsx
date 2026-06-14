@@ -7,7 +7,7 @@ function GameTimer(props) {
 
     useEffect(() => {
         if (props.gamePhase === GamePhases.PLANNING) {
-            setSeconds(3)
+            setSeconds(90)
             setIsActive(true)
         }
     }, [props.gamePhase])

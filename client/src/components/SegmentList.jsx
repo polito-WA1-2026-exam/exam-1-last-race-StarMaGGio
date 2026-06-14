@@ -18,12 +18,12 @@ function SegmentList(props) {
         props.setSelectedSegments((prevSelected) => {
             // Check if the selected segment was already in the selected list
             const isAlreadySelected = prevSelected.some(
-                (s) => s.nameS1 === segment.nameS1 && s.nameS2 === segment.nameS2
+                (s) => s.idS1 === segment.idS1 && s.idS2 === segment.idS2
             )
 
             if (isAlreadySelected) {
                 // Remove selected segment from the list of selected segments
-                return prevSelected.filter((s) => !(s.nameS1 === segment.nameS1 && s.nameS2 === segment.nameS2))
+                return prevSelected.filter((s) => !(s.idS1 === segment.idS1 && s.idS2 === segment.idS2))
             } else {
                 // Add the selected segment to the list of selected segments
                 return [...prevSelected, segment]
@@ -38,11 +38,11 @@ function SegmentList(props) {
                     
                     // Check if this segment is in the selected segments list
                     const isSelected = props.selectedSegments.some(
-                        (selected) => selected.nameS1 === s.nameS1 && selected.nameS2 === s.nameS2
+                        (selected) => selected.idS1 === s.idS1 && selected.idS2 === s.idS2
                     )
 
                     return <Segment 
-                                key={`${s.nameS1}-${s.nameS2}`}
+                                key={`${s.idS1}-${s.idS2}`}
                                 nameS1={s.nameS1} 
                                 nameS2={s.nameS2} 
                                 lineColor={s.lineColor}
