@@ -141,6 +141,21 @@ export const getSegmentsStationIds = () => {
     })
 }
 
+export const getRandomEvent = () => {
+    return new Promise((resolve, reject) => {
+        const query = ` SELECT name, description, coin_modifier
+                        FROM events
+                        ORDER BY RANDOM() LIMIT 1;
+                        `
+        
+        db.get(query, (err, row) => {
+            if (err) return reject(err)
+
+            else resolve(row)
+        })
+    })
+}
+
 /**
  * Function to get a random station from the stations in the database
  * @return the id and the name of the station

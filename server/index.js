@@ -4,7 +4,7 @@ import cors from "cors"
 import passport from "passport"
 import LocalStrategy from "passport-local"
 import session from "express-session"
-import { getUser, getBestScores, getSegments, getStations, getSegmentsStationIds } from "./dao.js"
+import { getUser, getBestScores, getSegments, getStations, getSegmentsStationIds, getRandomEvent } from "./dao.js"
 import { NetworkMap } from "./models/NetworkMap.js"
 
 const PREFIX = "/api/v1"
@@ -219,7 +219,6 @@ app.post(PREFIX + "/game/validate-path", async (req, res) => {
 
     // Response for the backend
     if (result.isValid) {
-      // --- HERE take n random events to return to the frontend ---
       return res.status(200).json({
         success: true,
         message: result.reason,
@@ -231,6 +230,17 @@ app.post(PREFIX + "/game/validate-path", async (req, res) => {
         message: result.reason
       })
     }
+  } catch (err) {
+    console.log(err)
+    internalError(res)
+  }
+})
+
+// GET /events/random-one
+app.get(PREFIX + "/events/random-one", async (req, res) => {
+  try {
+    const event = await getRandomEvent()
+    res.json(event)
   } catch (err) {
     console.log(err)
     internalError(res)

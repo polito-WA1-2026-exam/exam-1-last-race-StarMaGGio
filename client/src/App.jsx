@@ -16,7 +16,7 @@ import { Routes, Route, Outlet, useNavigate, Navigate } from 'react-router'
 import { useState, useContext, useEffect } from 'react'
 import { checkSession, logout } from './api/auth.js'
 import { getSegments, getRandomStartEndStations } from './api/network.js'
-import { sendRouteForValidation } from './api/game.js'
+import { sendRouteForValidation, getRandomEvent } from './api/game.js'
 
 function App() {
   const navigate = useNavigate()
@@ -195,7 +195,8 @@ function GamePage(props) {
   const [endStation, setEndStation] = useState({id: null, name: null})
   const [segments, setSegments] = useState([])
   const [selectedSegments, setSelectedSegments] = useState([])
-  const [events, setEvents] = useState([{name: "Good Event", modifier: 3}, {name: "Bad Event", modifier: -5}])
+  const [events, setEvents] = useState([])
+  const [isValidated, setIsValidated] = useState(false)
 
   // Fetch segments at page load
   useEffect(() => { getSegments().then((res) => setSegments(res))}, [])
@@ -213,9 +214,27 @@ function GamePage(props) {
   // Execute the sendRouteForValidation API with the selected segments when gamePhase switch to EXECUTION
   useEffect(() => {
     if (props.gamePhase === GamePhases.EXECUTION) {
-      sendRouteForValidation(startStation, endStation, selectedSegments).then((res) => {console.log(res)})
+      setIsValidated(false)
+      sendRouteForValidation(startStation, endStation, selectedSegments).then((res) => {
+        if (res.success) {
+          // Fetch all events concurrently
+          const promises = []
+          for (let i = 0; i < res.events; i++) {
+            promises.push(getRandomEvent())
+          }
+          Promise.all(promises).then((fetchedEvents) => {
+            setEvents(fetchedEvents)
+            setIsValidated(true)
+          })
+        } else {
+          setEvents([])
+          setIsValidated(true)
+        }
+      })
+    } else {
+      setIsValidated(false)
     }
-  }, [props.gamePhase])
+  }, [props.gamePhase, startStation, endStation, selectedSegments])
   
   return (
     <>
@@ -237,13 +256,14 @@ function GamePage(props) {
             {/* TODO: transform coins displayer in a component */}
             <Container className='d-flex flex-row' style={{background: "#fef8ee", border: "1px solid #c0c0c0", borderRadius: "15px", width: "7vw", "justify-content": "center"}}>
               <span className='fs-2 me-2'>{props.coins}</span>
-              <i class="bi bi-coin fs-2"></i>
+              <i className="bi bi-coin fs-2"></i>
             </Container>
           </Col>
         </Row>
         <Row>
           <Col xs={8}>
-            {(props.gamePhase === GamePhases.EXECUTION) && <EventExecution setCoins={props.setCoins} events={events} />}
+            {(props.gamePhase === GamePhases.EXECUTION && isValidated) && <EventExecution setCoins={props.setCoins} events={events} />}
+            {(props.gamePhase === GamePhases.EXECUTION && !isValidated) && <h3 className="mt-4 text-center text-primary">Validating route and fetching events...</h3>}
             {(props.gamePhase === GamePhases.SETUP || props.gamePhase === GamePhases.PLANNING) && <NetworkMap gamePhase={props.gamePhase}/>}
           </Col>
           <Col xs={4}>

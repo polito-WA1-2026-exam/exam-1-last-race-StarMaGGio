@@ -1,19 +1,26 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Container, Card, ProgressBar } from 'react-bootstrap'
+
+const TIMER_SECONDS = 5
 
 function EventExecution(props) {
     const [currentEventId, setCurrentEventId] = useState(0)
-    const [seconds, setSeconds] = useState(3)
+    const [seconds, setSeconds] = useState(TIMER_SECONDS)
+    const appliedEvents = useRef(new Set())
 
     // Apply event modifier and reset the timer on current event change
     useEffect(() => {
         if (!props.events || props.events.length === 0) return
 
-        const currentEvent = props.events[currentEventId]
-        props.setCoins((prevValue) => prevValue + currentEvent.modifier)
+        // Prevent double application in React Strict Mode
+        if (appliedEvents.current.has(currentEventId)) return
+        appliedEvents.current.add(currentEventId)
 
-        setSeconds(3)
-    }, [currentEventId])
+        const currentEvent = props.events[currentEventId]
+        props.setCoins((prevValue) => prevValue + Number(currentEvent.coin_modifier))
+
+        setSeconds(TIMER_SECONDS)
+    }, [currentEventId, props.events, props.setCoins])
 
     // Timer between one event and the next one
     useEffect(() => {
@@ -54,7 +61,7 @@ function EventExecution(props) {
                     <Card.Body className='p-5'>
                         <ProgressBar 
                             animated 
-                            now={(seconds / 3) * 100} 
+                            now={(seconds / TIMER_SECONDS) * 100} 
                             variant={seconds === 1 ? "danger" : "warning"} 
                             className="mb-4" 
                             style={{ height: '10px' }}
@@ -65,8 +72,8 @@ function EventExecution(props) {
                             {currentEvent.description}
                         </Card.Text>
 
-                        <div className={`fs-2 fw-bold mb-5 ${currentEvent.modifier >= 0 ? 'text-success' : 'text-danger'}`}>
-                            {currentEvent.modifier > 0 ? '+' : ''}{currentEvent.modifier}
+                        <div className={`fs-2 fw-bold mb-5 ${currentEvent.coin_modifier >= 0 ? 'text-success' : 'text-danger'}`}>
+                            {currentEvent.coin_modifier > 0 ? '+' : ''}{currentEvent.coin_modifier}
                         </div>
                     </Card.Body>
                 </Card>
