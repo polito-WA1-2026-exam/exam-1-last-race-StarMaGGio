@@ -94,12 +94,35 @@ function validatePlayerRoute(startStationId, endStationId, selectedSegments) {
 
   // 5. Anti-cheat check
   // Check if there are extra segments in the submitted route
-  // by checking if in the route graph there are nodes that have not been visited by the BFS.
+  // by checking if in the route graph there are nodes that have not been visited by the BFS,
+  // or if there are branches/loops (which would cause intermediate nodes to have degree != 2,
+  // and start/end nodes to have degree != 1).
   for (const node in routeGraph) {
-    if (!visited.has(Number(node))) {
+    const nodeId = Number(node)
+
+    // Check for disconnected components
+    if (!visited.has(nodeId)) {
       return {
         isValid: false,
         reason: "Extra segments have been selected!"
+      }
+    }
+
+    // Check for branches and loops using graph node degrees
+    const degree = routeGraph[node].length
+    if (nodeId === startStationId || nodeId === endStationId) {
+      if (degree !== 1) {
+        return {
+          isValid: false,
+          reason: "Extra segments have been selected!"
+        }
+      }
+    } else {
+      if (degree !== 2) {
+        return {
+          isValid: false,
+          reason: "Extra segments have been selected!"
+        }
       }
     }
   }
@@ -227,7 +250,11 @@ app.post(PREFIX + "/game/validate-path", async (req, res) => {
     } else {
       return res.status(200).json({
         success: false,
-        message: result.reason
+        message: result.reason,
+        event: {  name: "You Lost!",
+                  description: result.reason,
+                  coin_modifier: -20
+        }
       })
     }
   } catch (err) {

@@ -15,6 +15,8 @@ function SegmentList(props) {
      * @param {*} segment 
      */
     const onToggleSegment = (segment) => {
+        if (props.gamePhase !== GamePhases.PLANNING) return;
+
         props.setSelectedSegments((prevSelected) => {
             // Check if the selected segment was already in the selected list
             const isAlreadySelected = prevSelected.some(

@@ -18,8 +18,6 @@ function EventExecution(props) {
 
         const currentEvent = props.events[currentEventId]
         props.setCoins((prevValue) => prevValue + Number(currentEvent.coin_modifier))
-
-        setSeconds(TIMER_SECONDS)
     }, [currentEventId, props.events, props.setCoins])
 
     // Timer between one event and the next one
@@ -29,8 +27,9 @@ function EventExecution(props) {
         if (seconds === 0) {
             if (currentEventId < props.events.length - 1) {
                 setCurrentEventId(currentEventId + 1)
+                setSeconds(TIMER_SECONDS)
             } else {
-                // Go to result phase
+                props.showResult()
             }
             return
         }
@@ -41,11 +40,6 @@ function EventExecution(props) {
 
         return () => clearInterval(interval)
     }, [seconds, currentEventId, props.events])
-
-    if (!props.events || props.events.length === 0) {
-        // TODO: Show message and remove all coins
-        return null
-    }
 
     const currentEvent = props.events[currentEventId]
 
