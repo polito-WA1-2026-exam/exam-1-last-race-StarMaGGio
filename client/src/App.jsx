@@ -5,6 +5,7 @@ import NetworkMap from './components/NetworkMap'
 import SegmentList from './components/SegmentList'
 import StartEndStations from './components/StartEndStations'
 import ScoresTable from './components/ScoresTable'
+import EventExecution from './components/EventExecution'
 import bgImg from './assets/Login background.png'
 import UserContext from './contexts/UserContext.js'
 import { GamePhases } from './models/gamePhases.js'
@@ -101,6 +102,7 @@ function App() {
           <Route index element={<LoginPage doLogin={doLogin}/>}/>
           <Route path="last-race" element={<GamePage
                                               coins={coins}
+                                              setCoins={setCoins}
                                               gamePhase={gamePhase}
                                               startExecutionPhase={startExecutionPhase}
                                             />}/>
@@ -193,6 +195,7 @@ function GamePage(props) {
   const [endStation, setEndStation] = useState({id: null, name: null})
   const [segments, setSegments] = useState([])
   const [selectedSegments, setSelectedSegments] = useState([])
+  const [events, setEvents] = useState([{name: "Good Event", modifier: 3}, {name: "Bad Event", modifier: -5}])
 
   // Fetch segments at page load
   useEffect(() => { getSegments().then((res) => setSegments(res))}, [])
@@ -240,7 +243,8 @@ function GamePage(props) {
         </Row>
         <Row>
           <Col xs={8}>
-            <NetworkMap gamePhase={props.gamePhase}/>
+            {(props.gamePhase === GamePhases.EXECUTION) && <EventExecution setCoins={props.setCoins} events={events} />}
+            {(props.gamePhase === GamePhases.SETUP || props.gamePhase === GamePhases.PLANNING) && <NetworkMap gamePhase={props.gamePhase}/>}
           </Col>
           <Col xs={4}>
             <SegmentList
