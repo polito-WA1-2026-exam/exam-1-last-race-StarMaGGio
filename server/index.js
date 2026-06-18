@@ -4,7 +4,7 @@ import cors from "cors"
 import passport from "passport"
 import LocalStrategy from "passport-local"
 import session from "express-session"
-import { getUser, getBestScores, getSegments, getStations, getSegmentsStationIds, getRandomEvent } from "./dao.js"
+import { getUser, getBestScores, saveScore, getSegments, getStations, getSegmentsStationIds, getRandomEvent } from "./dao.js"
 import { NetworkMap } from "./models/NetworkMap.js"
 
 const PREFIX = "/api/v1"
@@ -274,7 +274,7 @@ app.get(PREFIX + "/events/random-one", async (req, res) => {
   }
 })
 
-/* - Best Scores - */
+/* - Scores - */
 // GET /scores/bests
 app.get(PREFIX + "/scores/bests", async (req, res) => {
   try {
@@ -287,7 +287,17 @@ app.get(PREFIX + "/scores/bests", async (req, res) => {
 })
 
 // POST /scores
-// TODO ...
+app.post(PREFIX + "/scores", async (req, res) => {
+  try {
+    const id = req.user.id
+    const score = req.body.finalScore
+    const response = await saveScore(score, id)
+    res.json(response)
+  } catch (err) {
+    console.log(err)
+    internalError(res)
+  }
+})
 
 /* --- SERVER STARTUP --- */
 

@@ -18,16 +18,17 @@ import { useState, useContext, useEffect } from "react";
 import { checkSession, logout } from "./api/auth.js";
 import { getSegments, getRandomStartEndStations } from "./api/network.js";
 import { sendRouteForValidation, getRandomEvent } from "./api/game.js";
+import { saveScoreToBackend } from "./api/scores.js";
 
 function App() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   /**
    * --- States ---
    */
-  const [user, setUser] = useState({ id: undefined, username: undefined });
-  const [coins, setCoins] = useState(20);
-  const [gamePhase, setGamePhase] = useState(GamePhases.SETUP);
+  const [user, setUser] = useState({ id: undefined, username: undefined })
+  const [coins, setCoins] = useState(20)
+  const [gamePhase, setGamePhase] = useState(GamePhases.SETUP)
 
   /**
    * --- Functions to manage user login, logout and session ---
@@ -38,9 +39,9 @@ function App() {
    */
   useEffect(() => {
     checkSession().then((res) => {
-      setUser({ id: res.id, username: res.username });
-    });
-  }, []);
+      setUser({ id: res.id, username: res.username })
+    })
+  }, [])
 
   /**
    * Function to handle the log in in the client.
@@ -48,40 +49,42 @@ function App() {
    * @param {*} user
    */
   const doLogin = (user) => {
-    setUser({ id: user.id, username: user.username });
-    navigate("/last-race");
-  };
+    setUser({ id: user.id, username: user.username })
+    navigate("/last-race")
+  }
 
   /**
    * Function to handle the log out in the client.
    * Set the current user to undefined and redirect to the login page.
    */
   const doLogout = () => {
-    setUser({ id: undefined, username: undefined });
-    navigate("/");
-  };
+    setUser({ id: undefined, username: undefined })
+    navigate("/")
+  }
 
   /* --- Functions to move between game phases ---
    *   Setup -> Planning -> Execution -> Result
    */
   const startPlanningPhase = () => {
-    setGamePhase(GamePhases.PLANNING);
-  };
+    setGamePhase(GamePhases.PLANNING)
+  }
 
   const startExecutionPhase = () => {
-    setGamePhase(GamePhases.EXECUTION);
-  };
+    setGamePhase(GamePhases.EXECUTION)
+  }
 
   const showResult = () => {
-    setGamePhase(GamePhases.RESULT);
-    navigate("/result")
+    setGamePhase(GamePhases.RESULT)
+    
+    if (coins < 0) setCoins(0)
 
-    // Do other things like show result and save in games table ecc...
-  };
+    saveScoreToBackend(coins)
+    navigate("/result")
+  }
 
   const playAgain = () => {
     setGamePhase(GamePhases.SETUP)
-    setCoins(0)
+    setCoins(20)
     navigate("/last-race")
   }
 
@@ -366,14 +369,20 @@ function GameInstructionsPage(props) {
 
   return (
     <>
-      <Container
-        fluid
-        className="d-flex flex-column align-items-center justify-content-center"
-      >
-        <span>Game Instructions bla bla bla ...</span>
+      <Container fluid className="d-flex flex-column align-items-center justify-content-center">
+        <Container className="py-5" style={{ maxWidth: '800px' }}>
+          <div className="text-center mb-5">
+            <h1 className="display-4 fw-bold text-primary mb-3">How to Play</h1>
+            <p className="lead text-muted">
+              Your objective is to navigate the train network facing unexpected events
+              and trying to save as many coins as possible. You start with <strong>20</strong> <i className="bi bi-coin"></i>
+            </p>
+          </div>
+
+        </Container>
+
         <Button className="mt-3" onClick={() => navigate("/")}>
-          {" "}
-          Back to Login{" "}
+          Back to Login
         </Button>
       </Container>
     </>

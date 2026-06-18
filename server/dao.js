@@ -80,6 +80,21 @@ export const getBestScores = () => {
     })
 }
 
+export const saveScore = (score, id) => {
+    return new Promise((resolve, reject) => {
+
+        const query = ` INSERT INTO games (user_id, final_score)
+                        VALUES (?, ?);
+                        `
+
+        db.run(query, [id, score],  (err) => {
+            if (err) return reject(err)
+
+            else resolve()
+        })
+    })
+}
+
 export const getStations = () => {
     return new Promise((resolve, reject) => {
         

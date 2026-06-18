@@ -15,3 +15,24 @@ export async function getBestScores() {
         throw new Error("Network Error", {cause: ex})
     }
 }
+
+export async function saveScoreToBackend(score) {
+    try {
+        const response = await fetch(PREFIX + "/scores", {
+            method: "POST",
+            body: JSON.stringify({
+                finalScore: score
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include"
+        })
+
+        if (response.ok) {
+            return
+        } else throw new Error("HTTP error in saveScoreToBackend, code = " + response.status)
+    } catch (err) {
+        throw new Error("Network Error", {cause: ex})
+    }
+}
