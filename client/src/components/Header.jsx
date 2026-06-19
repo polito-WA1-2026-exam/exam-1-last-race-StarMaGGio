@@ -12,46 +12,46 @@ import '../styles/Header.css'
  * - Play/Play Again button: visible only to logged in users and enabled only in non-playing mode
  * - Countdown timer: visible to logged in users in playing mode
  * - Best Scores button: visible only to logged in users and disabled in playing mode
- * - User icon:
+ * - User icon and Logout link
  * @param {*} props 
  */
 function Header(props) {
     const navigate = useNavigate()
     const location = useLocation()
+    const isLoggedIn = props.user.id !== undefined
+    const isIdle = props.gamePhase === GamePhases.SETUP || props.gamePhase === GamePhases.RESULT
 
     return(
         <>
-            <Navbar className='glass-navbar'>
-                <Container fluid>
-                    <div>
+            <Navbar className='navbar'>
+                <Container fluid className='header-inner'>
+                    <div className='header-brand'>
                         <Navbar.Brand className='navbar-title'> Last Race </Navbar.Brand>
                     </div>
-                    <div>
-                        {props.user.id !== undefined
-                        && location.pathname !== '/best-scores'
-                        && (props.gamePhase == GamePhases.SETUP || props.gamePhase == GamePhases.RESULT)
-                        && <Button 
+
+                    <div className='header-actions header-actions-center'>
+                        {isLoggedIn && location.pathname !== '/best-scores' && isIdle
+                        && <Button
+                                className='header-button header-button-primary'
                                 onClick={() => {
                                     if (props.gamePhase === GamePhases.SETUP) props.startPlanningPhase()
                                     else if (props.gamePhase === GamePhases.RESULT) props.playAgain()
-                                }}
-                            >
-                                {props.gamePhase === GamePhases.SETUP ? "Play" : "Play Again"}
-                            </Button>}
-                        {props.gamePhase == GamePhases.PLANNING
+                        }}>
+                            {props.gamePhase === GamePhases.SETUP ? "Play" : "Play Again"}
+                        </Button>}
+                        {props.gamePhase === GamePhases.PLANNING
                         && <GameTimer onTimeUp={props.startExecutionPhase} gamePhase={props.gamePhase}/>}
                     </div>
-                    <div>
-                        {props.user.id !== undefined && <Button 
-                                                            onClick={() => navigate("/best-scores")}
-                                                            disabled={props.gamePhase !== GamePhases.SETUP && props.gamePhase !== GamePhases.RESULT}
-                                                        > 
-                                                            Best Scores 
-                                                        </Button>}
 
-                        {props.user.id !== undefined && <span>
-                                <PersonFill size={32} className="ms-2 me-1" />
-                                <Link to='/logout'>Logout</Link>
+                    <div className='header-actions header-actions-end'>
+                        {isLoggedIn
+                        && <Button className='header-button header-button-secondary' onClick={() => navigate("/best-scores")} disabled={!isIdle}> 
+                            Best Scores 
+                        </Button>}
+
+                        {isLoggedIn && <span className='header-user'>
+                            <PersonFill className='header-user-icon'/>
+                            <Link className='header-logout-link' to='/logout'>Logout</Link>
                         </span>}
                     </div>
                 </Container>

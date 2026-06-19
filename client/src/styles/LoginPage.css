@@ -1,6 +1,104 @@
-.login-background {
+.app-layout-login {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(135deg, rgba(19, 14, 48, 0.05), rgba(41, 19, 137, 0.06)),
+    url('../assets/Login background.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  min-height: 100vh;
+}
+
+.app-layout-login .navbar {
+  background: linear-gradient(135deg, rgba(254, 248, 238, 0.82), rgba(250, 236, 209, 0.72));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.login-page {
+  position: relative;
+  min-height: calc(100vh - 86px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem 3rem;
+  background: transparent;
+  overflow: hidden;
+}
+
+.login-page-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.login-page-hero {
+  text-align: center;
+  color: #291389;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.login-page-title {
+  margin: 0;
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.login-page-subtitle {
+  margin: 0.5rem 0 0;
+  max-width: 34rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0.92;
+}
+
+.how-to-play-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.35rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #291389, #4c2fb6);
+  box-shadow: 0 12px 24px rgba(41, 19, 137, 0.25);
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.how-to-play-button:hover,
+.how-to-play-button:focus {
+  transform: translateY(-1px);
+  filter: brightness(0.97);
+  box-shadow: 0 14px 28px rgba(41, 19, 137, 0.28);
+}
+
+.how-to-play-button:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25), 0 14px 28px rgba(41, 19, 137, 0.28);
+}
+
+@media (max-width: 768px) {
+  .app-layout-login {
+    background-attachment: scroll;
+  }
+
+  .login-page {
+    min-height: auto;
+    padding: 1.5rem 1rem 2rem;
+  }
+
+  .login-page-content {
+    gap: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .login-page-title {
+    font-size: 2.3rem;
+  }
+
+  .login-page-subtitle {
+    font-size: 0.95rem;
+  }
 }

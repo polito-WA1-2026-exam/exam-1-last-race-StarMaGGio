@@ -33,27 +33,31 @@ function LoginForm(props) {
         <>
             <Container className='login-form-container'> 
                 <Form className="login-form" onSubmit={handleSubmit}>
-                    {errMsg && <Form.Label className="text-danger">{errMsg}</Form.Label>}
-                    <Form.Group>
-                        <Form.Label> Username </Form.Label>
+                    <h2 className='login-form-title'>Welcome Back</h2>
+                    {errMsg && <p className="login-error-message">{errMsg}</p>}
+
+                    <Form.Group className='login-form-group'>
+                        <Form.Label className='login-form-label'> Username </Form.Label>
                         <Form.Control
-                            type="username"
+                            className='login-form-control'
+                            type='text'
                             placeholder="Enter username"
                             value={username}
                             onChange={(e) => { setUsername(e.target.value) }}
                         />
                     </Form.Group>
 
-                    <Form.Group>
-                        <Form.Label> Password </Form.Label>
+                    <Form.Group className='login-form-group'>
+                        <Form.Label className='login-form-label'> Password </Form.Label>
                         <Form.Control
+                            className='login-form-control'
                             type="password"
                             value={password}
                             onChange={(e) => { setPassword(e.target.value) }}
                         />
                     </Form.Group>
 
-                    <Button type="submit">
+                    <Button className='login-submit-button' type="submit">
                         Login
                     </Button>
                 </Form>

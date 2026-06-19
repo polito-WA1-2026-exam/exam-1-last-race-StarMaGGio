@@ -4,8 +4,6 @@ import { useContext } from "react"
 
 import LoginForm from "../components/LoginForm"
 import UserContext from "../contexts/UserContext.js"
-
-import bgImg from "../assets/Login background.png"
 import "../styles/LoginPage.css"
 
 /**
@@ -22,13 +20,18 @@ function LoginPage(props) {
 
   return (
     <>
-      <div className="login-background" style={{ backgroundImage: `url(${bgImg})` }}>
-        <Container fluid className="d-flex flex-column align-items-center justify-content-center">
-          <LoginForm doLogin={props.doLogin} />
-          <Button className="mt-3" onClick={() => navigate("/game-instructions")}>
-            How to Play
-          </Button>
-        </Container>
+      <div className="login-page">
+        <div className="login-page-overlay"/>
+          <Container fluid className="login-page-content">
+            <div className="login-page-hero">
+              <h1 className="login-page-title">Last Race</h1>
+              <p className="login-page-subtitle">Organize your jurney, plan your race and keep everything under control.</p>
+            </div>
+            <LoginForm doLogin={props.doLogin} />
+            <Button className="how-to-play-button" onClick={() => navigate("/game-instructions")}>
+              How to Play
+            </Button>
+          </Container>
       </div>
     </>
   )
