@@ -6,9 +6,12 @@ import sqlite from 'sqlite3'
 import crypto from 'crypto'
 import { resolve } from 'dns';
 
+/**
+ * Database connection
+ */
 const db = new sqlite.Database("database.db", (err) => {
     if (err) throw err;
-    else console.log("Database connected successfully") // Keep for debug, remove later
+    else console.log("Database connected successfully")
 })
 
 /**
@@ -58,7 +61,7 @@ export const getUser = (username, password) => {
 /**
  * Method to get, from the games table in the database, for each user
  * who played at least one game, the best score through games he played.
- * @returns a list of pairs with the user and its best score
+ * @returns a promise with the list of pairs with the user and its best score
  */
 export const getBestScores = () => {
     return new Promise((resolve, reject) => {
@@ -80,6 +83,12 @@ export const getBestScores = () => {
     })
 }
 
+/**
+ * Method to save the score of a user in the database
+ * @param {int} score 
+ * @param {int} id 
+ * @returns a promise with the result of the insertion in the database
+ */
 export const saveScore = (score, id) => {
     return new Promise((resolve, reject) => {
 
@@ -95,6 +104,10 @@ export const saveScore = (score, id) => {
     })
 }
 
+/**
+ * Method to get from the database the list of stations that are part of the network map
+ * @returns A promise with the list of stations with their id and name
+ */
 export const getStations = () => {
     return new Promise((resolve, reject) => {
         
@@ -142,6 +155,11 @@ export const getSegments = () => {
     })
 }
 
+/**
+ * Method to get from the database the list of segments that connect
+ * all the stations of the network map, but only with the ids of the two stations
+ * @returns A promise with the list of segments with the ids of the two stations that are connected by the segment
+ */
 export const getSegmentsStationIds = () => {
     return new Promise((resolve, reject) => {
         const query = ` SELECT station_id_1, station_id_2
@@ -156,6 +174,10 @@ export const getSegmentsStationIds = () => {
     })
 }
 
+/**
+ * Method to get a random event from the events in the database
+ * @returns A promise with the name, description and coin_modifier of the event
+ */
 export const getRandomEvent = () => {
     return new Promise((resolve, reject) => {
         const query = ` SELECT name, description, coin_modifier
@@ -170,24 +192,3 @@ export const getRandomEvent = () => {
         })
     })
 }
-
-/**
- * Function to get a random station from the stations in the database
- * @return the id and the name of the station
- */
-/*
-export const getRandomStation = () => {
-    return new Promise((resolve, reject) => {
-        const query = ` SELECT *
-                        FROM stations
-                        ORDER BY RANDOM() LIMIT 1;
-                        `
-        
-        db.get(query, (err, row) => {
-            if (err) return reject(err)
-
-            else resolve(row)
-        })
-    })
-}
-*/

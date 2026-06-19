@@ -1,9 +1,13 @@
 import express from "express"
+import session from "express-session"
+import { body, validationResult } from "express-validator"
+
 import morgan from "morgan"
 import cors from "cors"
+
 import passport from "passport"
 import LocalStrategy from "passport-local"
-import session from "express-session"
+
 import { getUser, getBestScores, saveScore, getSegments, getStations, getSegmentsStationIds, getRandomEvent } from "./dao.js"
 import { NetworkMap } from "./models/NetworkMap.js"
 
@@ -15,6 +19,10 @@ const NOT_AUTHENTICATED_MSG = "Not authenticated!"
 
 function internalError(res) {
     return err => res.status(500).json({"error": err.message})
+}
+
+function invalidInputParametersError(req, res) {
+  res.status(400).json(validationResult(req).array())
 }
 
 /* --- OBJECTS AND FUNCTIONS --- */
@@ -231,36 +239,45 @@ app.get(PREFIX + "/network/stations/random-start-end", async (req, res) => {
 
 /* - Game - */
 // POST /game/validate-path
-app.post(PREFIX + "/game/validate-path", async (req, res) => {
-  // TODO: maybe add body validation
-  try {
-    // Extract body data
-    const { startStation, endStation, selectedSegments } = req.body;
+app.post(PREFIX + "/game/validate-path", [
+  // Body validation
+  body('startStation.id').isInt({min: 0, max: stationsData.length}).notEmpty(),
+  body('endStation.id').isInt({min: 0, max: stationsData.length}).notEmpty(),
+  body('selectedSegments').notEmpty()
+], async (req, res) => {
+  if (validationResult(req).isEmpty()) {
+    try {
+      // Extract body data
+      const { startStation, endStation, selectedSegments } = req.body;
 
-    // Validate routeS
-    const result = validatePlayerRoute(startStation.id, endStation.id, selectedSegments)
+      // Validate route
+      const result = validatePlayerRoute(startStation.id, endStation.id, selectedSegments)
 
-    // Response for the backend
-    if (result.isValid) {
-      return res.status(200).json({
-        success: true,
-        message: result.reason,
-        events: result.numSegments
-      })
-    } else {
-      return res.status(200).json({
-        success: false,
-        message: result.reason,
-        event: {  name: "You Lost!",
-                  description: result.reason,
-                  coin_modifier: -20
-        }
-      })
+      // Response for the backend
+      if (result.isValid) {
+        return res.status(200).json({
+          success: true,
+          message: result.reason,
+          events: result.numSegments
+        })
+      } else {
+        return res.status(200).json({
+          success: false,
+          message: result.reason,
+          event: {  name: "You Lost!",
+                    description: result.reason,
+                    coin_modifier: -20
+          }
+        })
+      }
+    } catch (err) {
+      console.log(err)
+      internalError(res)
     }
-  } catch (err) {
-    console.log(err)
-    internalError(res)
+  } else {
+    invalidInputParametersError(req, res)
   }
+  
 })
 
 // GET /events/random-one
@@ -287,16 +304,23 @@ app.get(PREFIX + "/scores/bests", async (req, res) => {
 })
 
 // POST /scores
-app.post(PREFIX + "/scores", async (req, res) => {
-  try {
-    const id = req.user.id
-    const score = req.body.finalScore
-    const response = await saveScore(score, id)
-    res.json(response)
-  } catch (err) {
-    console.log(err)
-    internalError(res)
+app.post(PREFIX + "/scores", [
+  body('finalScore').isInt({min: 0}).notEmpty()
+], async (req, res) => {
+  if (validationResult(req).isEmpty()) {
+    try {
+      const id = req.user.id
+      const score = req.body.finalScore
+      const response = await saveScore(score, id)
+      res.json(response)
+    } catch (err) {
+      console.log(err)
+      internalError(res)
+    }
+  } else {
+    invalidInputParametersError(req, res)
   }
+  
 })
 
 /* --- SERVER STARTUP --- */

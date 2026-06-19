@@ -1,5 +1,10 @@
 const PREFIX = "http://localhost:3001/api/v1"
 
+/**
+ * API function to fetch the best scores from the backend.
+ * @returns {Promise<Array>} A promise that resolves to an array of the best scores.
+ * @throws {Error} Throws an error if the network request fails or if the response is not ok.
+ */
 export async function getBestScores() {
     try {
         const response = await fetch(PREFIX + "/scores/bests", {
@@ -16,6 +21,12 @@ export async function getBestScores() {
     }
 }
 
+/**
+ * API function to save the final score of the player to the backend.
+ * @param {int} score 
+ * @returns {Promise<void>} A promise that resolves if the score is saved successfully.
+ * @throws {Error} Throws an error if the network request fails or if the response is not ok.
+ */
 export async function saveScoreToBackend(score) {
     try {
         const response = await fetch(PREFIX + "/scores", {

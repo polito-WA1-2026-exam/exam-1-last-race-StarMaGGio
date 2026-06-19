@@ -6,7 +6,8 @@ const LOGOUT_FAILED_MSG = "Logout failed!"
  * API to fetch the user during the login phase
  * @param {string} username 
  * @param {string} password 
- * @returns user if login succeed, error otherwise
+ * @returns {Promise<Object>} A promise that resolves to the user object if the login is successful
+ * @throws {Error} Throws an error if the login fails
  */
 export async function login(username, password) {
     const response = await fetch(PREFIX + "/auth/login", {
@@ -29,7 +30,8 @@ export async function login(username, password) {
 
 /**
  * API to check if the client is currently logged in the application
- * @returns the logged user if the client is logged in the application, null otherwise
+ * @returns {Promise<Object|null>} A promise that resolves to the user object if the session is valid, otherwise null
+ * @throws {Error} Throws an error if the network request fails
  */
 export async function checkSession() {
     const response = await fetch(PREFIX + "/sessions/current", {
@@ -45,7 +47,8 @@ export async function checkSession() {
 
 /**
  * API to delete the current session of the client when it does the logout
- * @returns true if the logout succeed, otherwise throws an error
+ * @returns {Promise<boolean>} A promise that resolves to true if the logout is successful
+ * @throws {Error} Throws an error if the logout fails
  */
 export async function logout() {
     const response = await fetch(PREFIX + "/sessions/current", {
