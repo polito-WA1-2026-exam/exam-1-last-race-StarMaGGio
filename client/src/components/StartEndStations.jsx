@@ -12,10 +12,12 @@ function StartEndStations(props) {
     return (
         <>
             <Container className='start-end-stations-container'>
-                {props.gamePhase != GamePhases.SETUP && <>
-                    <span className='fs-3'>{props.startStation.name}</span>
-                    <i className="bi bi-arrow-right fs-3"></i>
-                    <span className='fs-3'>{props.endStation.name}</span></>
+                {props.gamePhase !== GamePhases.SETUP &&
+                    <div className='start-end-stations-value'>
+                        <span className='start-end-station-name'>{props.startStation.name}</span>
+                        <i className="bi bi-arrow-right start-end-stations-icon"></i>
+                        <span className='start-end-station-name'>{props.endStation.name}</span>
+                    </div>
                 }
             </Container>
         </>

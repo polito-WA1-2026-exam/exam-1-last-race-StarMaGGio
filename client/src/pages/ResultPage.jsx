@@ -10,16 +10,28 @@ function ResultPage(props) {
     
     return (
         <>
-        <Container className="result-container">
-            <Card className="text-center border-0">
-                <Card.Title className='fs-2 mb-3 fw-bold'>
-                    Score: {props.coins} points!
-                </Card.Title>
-            </Card>
-            
-            <Button onClick={() => navigate("/best-scores")}>
-                Best Scores
-            </Button>
+        <Container fluid className="result-page">
+            <div className="result-shell">
+                <div className="result-hero">
+                    <p className="result-kicker">Jurney Complete</p>
+                    <h1 className="result-title">Your Final Score is...</h1>
+                </div>
+
+                <Card className="result-card border-0">
+                    <Card.Body className='result-card-body'>
+                        <div className="result-score-display">
+                            <div className="result-score-value">{props.coins}</div>
+                            <div className="result-score-label">points!</div>
+                        </div>
+                    </Card.Body>
+                </Card>
+                
+                <Button 
+                    className="result-button"
+                    onClick={() => navigate("/best-scores")}>
+                    View Leaderboard
+                </Button>
+            </div>
         </Container>
         </>
     )

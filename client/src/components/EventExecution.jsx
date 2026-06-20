@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Container, Card, ProgressBar } from 'react-bootstrap'
+import "../styles/EventExecution.css"
 
 const TIMER_SECONDS = 5
 
@@ -45,28 +46,27 @@ function EventExecution(props) {
 
     return (
         <>
-            <Container className='d-flex flex-column align-items-center mt-4'>
-                <h2 className='mb-4 text-primary fw-bold'>Events happened during the journey</h2>
+            <Container className='event-exec-root'>
+                <h2 className='event-exec-heading'>Events happened during the journey</h2>
 
-                <Card className="text-center shadow-lg border-0" style={{ width: '100%', maxWidth: '500px' }}>
-                    <Card.Header className='bg-dark text-white fs-5'>
+                <Card className="event-exec-card">
+                    <Card.Header className='event-exec-card-header'>
                         Event {currentEventId + 1} of {props.events.length}
                     </Card.Header>
-                    <Card.Body className='p-5'>
+                    <Card.Body className='event-exec-card-body'>
                         <ProgressBar 
                             animated 
                             now={(seconds / TIMER_SECONDS) * 100} 
                             variant={seconds === 1 ? "danger" : "warning"} 
-                            className="mb-4" 
-                            style={{ height: '10px' }}
+                            className="event-exec-progress" 
                         />
 
-                        <Card.Title className='fs-2 mb-3 fw-bold'>{currentEvent.name}</Card.Title>
-                        <Card.Text className='fs-4 mb-4 text-muted'>
+                        <Card.Title className='event-exec-title'>{currentEvent.name}</Card.Title>
+                        <Card.Text className='event-exec-description'>
                             {currentEvent.description}
                         </Card.Text>
 
-                        <div className={`fs-2 fw-bold mb-5 ${currentEvent.coin_modifier >= 0 ? 'text-success' : 'text-danger'}`}>
+                        <div className={`event-exec-amount ${currentEvent.coin_modifier >= 0 ? 'event-positive' : 'event-negative'}`}>
                             {currentEvent.coin_modifier > 0 ? '+' : ''}{currentEvent.coin_modifier}
                         </div>
                     </Card.Body>

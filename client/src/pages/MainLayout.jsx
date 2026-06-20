@@ -12,9 +12,10 @@ function MainLayout(props) {
   const location = useLocation()
   const isLoginPage = location.pathname === "/"
   const isBestScoresPage = location.pathname === "/best-scores"
+  const isResultPage = location.pathname === "/result"
 
   return (
-    <div className={(isLoginPage || isBestScoresPage) ? "app-layout app-layout-bgimg" : "app-layout"}>
+    <div className={(isLoginPage || isBestScoresPage || isResultPage) ? "app-layout app-layout-bgimg" : "app-layout"}>
       <Header
         user={props.user}
         gamePhase={props.gamePhase}

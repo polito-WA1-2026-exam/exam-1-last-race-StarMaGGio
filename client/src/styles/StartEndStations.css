@@ -1,12 +1,25 @@
 .start-end-stations-container {
-    width: 35vw;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.95rem 1rem;
+}
 
-    background-color: #fef8ee;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    height: 50px;
-
-    gap: 10px;
+.start-end-stations-value {
     display: flex;
     align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    text-align: center;
+}
+
+.start-end-station-name {
+    font-size: clamp(1.15rem, 2vw, 1.6rem);
+    font-weight: 900;
+    line-height: 1.15;
+}
+
+.start-end-stations-icon {
+    font-size: clamp(1.05rem, 1.8vw, 1.35rem);
 }

@@ -1,0 +1,25 @@
+.coins-displayer {
+    display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.coins-displayer-value {
+    display: flex;
+	align-items: center;
+	gap: 0.45rem;
+}
+
+.coins-displayer-number {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+	font-weight: 900;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+.coins-displayer-icon {
+    font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+	color: #d4a017;
+}

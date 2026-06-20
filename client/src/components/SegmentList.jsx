@@ -36,22 +36,25 @@ function SegmentList(props) {
     return(
         <>
             <Container className='segment-list-container'>
-                {props.gamePhase !== GamePhases.SETUP && props.segments.map((s) => {
+                <div className='segment-list-scroll'>
+                    {props.gamePhase !== GamePhases.SETUP && props.segments.map((s) => {
                     
-                    // Check if this segment is in the selected segments list
-                    const isSelected = props.selectedSegments.some(
-                        (selected) => selected.idS1 === s.idS1 && selected.idS2 === s.idS2
-                    )
+                        // Check if this segment is in the selected segments list
+                        const isSelected = props.selectedSegments.some(
+                            (selected) => selected.idS1 === s.idS1 && selected.idS2 === s.idS2
+                        )
 
-                    return <Segment 
-                                key={`${s.idS1}-${s.idS2}`}
-                                nameS1={s.nameS1} 
-                                nameS2={s.nameS2} 
-                                lineColor={s.lineColor}
-                                isSelected={isSelected}
-                                onToggle={() => onToggleSegment(s)}
-                            />
-                })}
+                        return <Segment 
+                                    key={`${s.idS1}-${s.idS2}`}
+                                    nameS1={s.nameS1} 
+                                    nameS2={s.nameS2} 
+                                    lineColor={s.lineColor}
+                                    isSelected={isSelected}
+                                    onToggle={() => onToggleSegment(s)}
+                                />
+                    })}
+                </div>
+                
             </Container>
         </>
     )
@@ -69,9 +72,9 @@ function Segment(props) {
                     }}
                 onClick={props.onToggle}
             >
-                <span className='fs-3'>{props.nameS1}</span>
-                <i class="bi bi-arrow-left-right fs-3"></i>
-                <span className='fs-3'>{props.nameS2}</span>
+                <span>{props.nameS1}</span>
+                <i className="bi bi-arrow-left-right"></i>
+                <span>{props.nameS2}</span>
             </Container>
         </>
     )

@@ -59,6 +59,10 @@
     box-shadow: 0 0 0 0.2rem rgba(41, 19, 137, 0.18);
 }
 
+.header-button:disabled {
+    background: rgba(41, 19, 137, 0.08);
+}
+
 .header-button-primary {
     background: linear-gradient(135deg, #291389, #4c2fb6);
     color: #fff;

@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
-import { GamePhases } from "../models/gamePhases";
+import { useState, useEffect } from "react"
+import { GamePhases } from "../models/gamePhases"
+import "../styles/GameTimer.css"
 
 function GameTimer(props) {
-    const [seconds, setSeconds] = useState(null);
-    const [isActive, setIsActive] = useState(true);
+    const [seconds, setSeconds] = useState(null)
+    const [isActive, setIsActive] = useState(true)
+
+    const isTimeNearEnd = seconds !== null && seconds <= 10
 
     useEffect(() => {
         if (props.gamePhase === GamePhases.PLANNING) {
@@ -13,11 +16,11 @@ function GameTimer(props) {
     }, [props.gamePhase])
 
     useEffect(() => {
-        let interval = null;
+        let interval = null
 
         // If the timer is active and the there are still remaining seconds
         // -> set an interval that after 1 seconds decrease the remaining seconds by 1
-        if (isActive && seconds > 0) 
+        if (isActive && seconds > 0)
             interval = setInterval(() => { setSeconds((prevSeconds) => prevSeconds - 1) }, 1000)
         
         // When seconds reach 0 -> clear interval, disable timer and call onTimeUp function
@@ -36,8 +39,9 @@ function GameTimer(props) {
 
     return (
         <>
-            <div className="d-flex flex-column align-items-center">
-                <div className="fs-1 fw-bold text-primary mb-3">
+            <div className={`game-timer ${isTimeNearEnd ? "game-timer-warning" : ""}`} aria-live="polite">
+                <div className="game-timer-label">Time left</div>
+                <div className="game-timer-value">
                     {seconds}
                 </div>
             </div>

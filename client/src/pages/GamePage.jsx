@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import { useNavigate, Navigate } from "react-router"
+import { Navigate } from "react-router"
 import { Container, Row, Col, Button } from "react-bootstrap"
 
 import NetworkMap from "../components/NetworkMap"
@@ -26,15 +26,15 @@ import "../styles/GamePage.css"
  */
 function GamePage(props) {
   const user = useContext(UserContext);
-  if (user.id == undefined) return <Navigate to={"/"} />;
+  if (user.id == undefined) return <Navigate to={"/"} />
 
   // States
-  const [startStation, setStartStation] = useState({ id: null, name: null });
-  const [endStation, setEndStation] = useState({ id: null, name: null });
-  const [segments, setSegments] = useState([]);
-  const [selectedSegments, setSelectedSegments] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [isValidated, setIsValidated] = useState(false);
+  const [startStation, setStartStation] = useState({ id: null, name: null })
+  const [endStation, setEndStation] = useState({ id: null, name: null })
+  const [segments, setSegments] = useState([])
+  const [selectedSegments, setSelectedSegments] = useState([])
+  const [events, setEvents] = useState([])
+  const [isValidated, setIsValidated] = useState(false)
 
   // Custom hook for the game flow
   useGameFlowEffects({
@@ -51,63 +51,79 @@ function GamePage(props) {
 
   return (
     <>
-      <Container fluid className="game-container">
-        <Row>
-          <Col>
-            <StartEndStations
-              startStation={startStation}
-              endStation={endStation}
-              gamePhase={props.gamePhase}
-            />
-          </Col>
+      <Container fluid className="game-page">
+        <div className="game-page-shell">
 
-          <Col>
-            {/* Show the button to submit the route when in Planning Phase */}
-            {props.gamePhase === GamePhases.PLANNING && (
-              <Button onClick={() => { props.startExecutionPhase() }}>
-                Submit Route
-              </Button>
-            )}
-          </Col>
+          <Row className="game-page-status-row g-3 align-items-stretch">
+            <Col lg={5} className="d-flex">
+              <div className="game-page-panel game-page-panel-status w-100">
+                <StartEndStations
+                  startStation={startStation}
+                  endStation={endStation}
+                  gamePhase={props.gamePhase}
+                />
+              </div>
+            </Col>
 
-          <Col>
-            <CoinsDisplayer coins = {props.coins}/>
-          </Col>
-        </Row>
+            <Col lg={3}>
+              {/* Show the button to submit the route when in Planning Phase */}
+              
+              {props.gamePhase === GamePhases.PLANNING && (
+                <div className="game-page-panel game-page-panel-action w-100">
+                  <Button 
+                    className="game-submit-button"
+                    onClick={() => { props.startExecutionPhase() }}>
+                    Submit Route
+                  </Button>
+                </div>
+              )}
+            </Col>
 
-        <Row>
-          <Col xs={8}>
-            {/* Show the component of the events execution when in Execution phase and the submitted route is validated */}
-            {props.gamePhase === GamePhases.EXECUTION && isValidated && (
-              <EventExecution
-                setCoins={props.setCoins}
-                events={events}
-                showResult={props.showResult}
-              />
-            )}
-            {/* While validating show loading... */}
-            {props.gamePhase === GamePhases.EXECUTION && !isValidated && (
-              <h3 className="mt-4 text-center text-primary">
-                Validating route and fetching events...
-              </h3>
-            )}
+            <Col className="d-flex" lg={4}>
+                <div className="game-page-panel game-page-panel-coins w-100">
+                  <CoinsDisplayer coins={props.coins}/>
+                </div>
+            </Col>
+          </Row>
 
-            {/* Show the Network map component when in Setup or Planning phase */}
-            {(props.gamePhase === GamePhases.SETUP ||
-              props.gamePhase === GamePhases.PLANNING) && (
-              <NetworkMap gamePhase={props.gamePhase} />
-            )}
-          </Col>
+          <Row className="game-page-main-row g-4 align-items-start">
+            <Col lg={8} class="d-flex">
+                <div className="game-page-panel game-page-panel-main w-100">
+                {/* Show the component of the events execution when in Execution phase and the submitted route is validated */}
+                {props.gamePhase === GamePhases.EXECUTION && isValidated && (
+                  <EventExecution
+                    setCoins={props.setCoins}
+                    events={events}
+                    showResult={props.showResult}
+                  />
+                )}
+                {/* While validating show loading... */}
+                {props.gamePhase === GamePhases.EXECUTION && !isValidated && (
+                  <div className="game-page-loading-state">
+                    Validating route and fetching events...
+                  </div>
+                )}
 
-          <Col xs={4}>
-            <SegmentList
-              segments={segments}
-              gamePhase={props.gamePhase}
-              selectedSegments={selectedSegments}
-              setSelectedSegments={setSelectedSegments}
-            />
-          </Col>
-        </Row>
+                {/* Show the Network map component when in Setup or Planning phase */}
+                {(props.gamePhase === GamePhases.SETUP ||
+                  props.gamePhase === GamePhases.PLANNING) && (
+                  <NetworkMap gamePhase={props.gamePhase} />
+                )}
+              </div>
+            </Col>
+
+            <Col lg={4} className="d-flex">
+              <div className="game-page-panel game-page-panel-side w-100">
+                <SegmentList
+                  segments={segments}
+                  gamePhase={props.gamePhase}
+                  selectedSegments={selectedSegments}
+                  setSelectedSegments={setSelectedSegments}
+                />
+              </div>
+            </Col>
+          </Row>
+        </div>
       </Container>
     </>
   )

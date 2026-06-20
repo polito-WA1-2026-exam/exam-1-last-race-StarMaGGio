@@ -1,9 +1,14 @@
 .network-map-container {
-    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0.25rem;
 }
 
 .network-map {
+    display: block;
     width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 15px;
+    max-height: min(70vh, 760px);
+    object-fit: contain;
 }

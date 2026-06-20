@@ -1,5 +1,97 @@
-.result-container {
+.result-page {
+    min-height: calc(100vh - 86px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem 20rem;
+}
+
+.result-shell {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.result-hero {
     text-align: center;
-    gap: 20px;
-    padding: 20px;
+    color: #291389;
+}
+
+.result-kicker {
+    margin: 0 0 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.72;
+}
+
+.result-title {
+    margin: 0;
+    font-size: clamp(2rem, 3rem, 4rem);
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    text-shadow: 0 10px 22px rgba(41, 19, 137, 0.12);
+}
+
+.result-card {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 1.5rem;
+    background: rgba(255, 250, 242, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 24px 48px rgba(41, 19, 137, 0.14);
+}
+
+.result-card-body {
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.result-score-display {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    gap: 1rem;
+}
+
+.result-score-value {
+    font-size: clamp(2.8rem, 7rem, 4.2rem);
+    font-weight: 900;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.result-score-label {
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.result-button {
+    border: none;
+    border-radius: 999px;
+    padding: 0.8rem 1.45rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #291389, #4c2fb6);
+    box-shadow: 0 12px 24px rgba(41, 19, 137, 0.25);
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.result-button:hover,
+.result-button:focus {
+    transform: translateY(-1px);
+    filter: brightness(0.98);
+    box-shadow: 0 14px 28px rgba(41, 19, 137, 0.28);
+}
+
+.result-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.28), 0 14px 28px rgba(41, 19, 137, 0.28);
 }

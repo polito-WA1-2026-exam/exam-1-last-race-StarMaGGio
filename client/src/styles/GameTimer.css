@@ -1,0 +1,40 @@
+.game-timer {
+    display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.2rem;
+	min-width: 118px;
+	padding: 0.55rem 0.95rem;
+	border-radius: 999px;
+	border: 1px solid rgba(41, 19, 137, 0.12);
+	background: linear-gradient(135deg, rgba(255, 250, 242, 0.98), rgba(247, 241, 255, 0.95));
+	box-shadow: 0 10px 22px rgba(41, 19, 137, 0.08);
+}
+
+.game-timer-label {
+    color: rgba(41, 19, 137, 0.68);
+	font-size: 0.75rem;
+	font-weight: 800;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+
+.game-timer-value {
+    color: #291389;
+	font-size: clamp(1.5rem, 2.8vw, 2rem);
+	font-weight: 900;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+.game-timer-warning {
+    border-color: rgba(208, 55, 72, 0.28);
+	background: linear-gradient(135deg, rgba(255, 238, 240, 0.98), rgba(255, 247, 247, 0.95));
+	box-shadow: 0 12px 24px rgba(208, 55, 72, 0.12);
+}
+
+.game-timer-warning .game-timer-label,
+.game-timer-warning .game-timer-value {
+    color: #c92d3f;
+}
