@@ -11,9 +11,10 @@ import "../styles/LoginPage.css"
 function MainLayout(props) {
   const location = useLocation()
   const isLoginPage = location.pathname === "/"
+  const isBestScoresPage = location.pathname === "/best-scores"
 
   return (
-    <div className={isLoginPage ? "app-layout app-layout-login" : "app-layout"}>
+    <div className={(isLoginPage || isBestScoresPage) ? "app-layout app-layout-bgimg" : "app-layout"}>
       <Header
         user={props.user}
         gamePhase={props.gamePhase}

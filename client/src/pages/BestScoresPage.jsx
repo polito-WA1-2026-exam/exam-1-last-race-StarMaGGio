@@ -1,7 +1,8 @@
 import React from "react"
 import { useNavigate } from "react-router"
-import { Container, Button } from "react-bootstrap"
+import { Container, Button, Card } from "react-bootstrap"
 import ScoresTable from "../components/ScoresTable"
+import "../styles/BestScoresPage.css"
 
 /**
  * Best Scores Page component for the application
@@ -13,14 +14,30 @@ function BestScoresPage(props) {
 
   return (
     <>
-        <Container fluid className="d-flex flex-column align-items-center justify-content-center">
-            <ScoresTable />
-            <Button className="mt-3" onClick={() => {
-                props.backToGame()
-                navigate("/last-race")
-            }}>
-                Back to the Game
-            </Button>
+        <Container fluid className="best-scores-page">
+            <div className="best-scores-shell">
+                <div className="best-scores-hero">
+                    <p className="best-scores-kicker">Leaderboard</p>
+                    <h1 className="best-scores-title">Best Scores</h1>
+                    <p className="best-scores-subtitle">Check the current ranking of the players</p>
+                </div>
+
+                <Card className="best-scores-card border-0 shadow-sm">
+                    <Card.Body className="best-scores-card-body">
+                        <ScoresTable />
+                    </Card.Body>
+                </Card>
+                
+
+                <Button 
+                    className="back-to-game-button"
+                    onClick={() => {
+                        props.backToGame()
+                        navigate("/last-race")
+                    }}>
+                    Back to the Game
+                </Button>
+            </div>
         </Container>
     </>
   )
