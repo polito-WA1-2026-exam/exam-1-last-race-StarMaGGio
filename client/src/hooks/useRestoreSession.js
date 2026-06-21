@@ -8,6 +8,9 @@ function useRestoreSession(setUser) {
       .then((res) => {
         setUser({ id: res.id, username: res.username })
       })
+      .catch((err) => {
+        setUser({ id: undefined, username: undefined })
+      })
   }, [setUser])
 }
 

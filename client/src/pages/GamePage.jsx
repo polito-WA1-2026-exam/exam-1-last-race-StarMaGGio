@@ -87,7 +87,7 @@ function GamePage(props) {
           </Row>
 
           <Row className="game-page-main-row g-4 align-items-start">
-            <Col lg={8} class="d-flex">
+            <Col lg={8} className="d-flex">
                 <div className="game-page-panel game-page-panel-main w-100">
                 {/* Show the component of the events execution when in Execution phase and the submitted route is validated */}
                 {props.gamePhase === GamePhases.EXECUTION && isValidated && (

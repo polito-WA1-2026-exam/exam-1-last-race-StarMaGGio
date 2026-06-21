@@ -34,15 +34,18 @@ export async function login(username, password) {
  * @throws {Error} Throws an error if the network request fails
  */
 export async function checkSession() {
-    const response = await fetch(PREFIX + "/sessions/current", {
-        credentials: "include"
-    })
+    try {
+        const response = await fetch(PREFIX + "/sessions/current", {
+            credentials: "include"
+        })
 
-    if (response.ok) {
-        return await response.json()
-    } else {
-        return null
+        if (response.ok) {
+            return await response.json()
+        } else return null
+    } catch (ex) {
+        throw new Error("Network Error", {cause: ex})
     }
+    
 }
 
 /**
