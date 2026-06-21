@@ -3,9 +3,12 @@
 
 ## React Client Application Routes
 
-- Route `/`: page content and purpose
-- Route `/something/:param`: page content and purpose, param specification
-- ...
+- Route `/`: root page, contains the main layout with the header and it's index is the login page.
+- Route `/last-race`: main page of the application, where the different phases of the game take place. Contains the game page with it's components.
+- Route `/result` : route where you are redirected at the end of a game. It contains the result page.
+- Route `/game-instructions`: contains the page that shows the rules of the game.
+- Route `/best-scores` : contains the page that shows the leaderboard with the best scores of the players.
+- Route `/logout`: route where you are redirected when you are logging out from the application. Contains the page that execute the log out.
 
 ## API Server
 
@@ -190,13 +193,25 @@
 
 - `ListOfSomething` (in `List.js`): component purpose and main functionality
 - `GreatButton` (in `GreatButton.js`): component purpose and main functionality
-- ...
 
-(only _main_ components, minor ones may be skipped)
+- `BestScoresPage` (in `BestScoresPage.jsx`): component where the components of the best scores page are mounted
+- `GameInstructionsPage` (in `GameInstructionsPage.jsx`): contains the instructions of the game
+- `GamePage` (in `GamePage.jsx`): component where the components used in the game are mounted. It also contains the game states, and the logic for calling the APIs for fetching segments and sending the route for validation.
+- `LoginPage` (in `LoginPage.jsx`): component where the components used for the login are mounted.
+- `LogoutPage` (in `LogoutPage.jsx`): execute the logic for the log out from the application
+- `MainLayout` (in `MainLayout.jsx`): contains the components for the main layout of the application
+- `ResultPage` (in `ResultPage.jsx`): component where the components of the result page are mounted
+- `EventExecution` (in `EventExecution.jsx`): manage and display the execution of the random events through a timer
+- `GameTimer` (in `GameTimer.jsx`): manage and display the countdown timer of the game.
+- `Header` (in `Header.jsx`): header of the application. Contains the play button, the game timer, the button to go to the best scores page and the link to logout.
+- `LoginForm` (in `LoginForm.jsx`): shows the form and contains the logic for the login
+- `ScoresTable` (in `ScoresTable.jsx`): contains the leaderboard of the best scores of the players
+- `SegmentList` (in `SegmentList.jsx`): shows the list of segments of the network and contains the logic to select/deselect them
 
 ## Screenshot
 
-![Screenshot](./img/screenshot.jpg)
+![General Ranking Screenshot](./leaderboard_screenshot.png)
+![In Game Screenshot](./in_game_screenshot.png)
 
 ## Users Credentials
 
