@@ -1,7 +1,7 @@
 # Exam #1: "Last Race"
 ## Student: s359927 MAGGIONI MATTIA
 
-## React Client Application Routes
+## React Client Application Routes 
 
 - Route `/`: root page, contains the main layout with the header and it's index is the login page.
 - Route `/last-race`: main page of the application, where the different phases of the game take place. Contains the game page with it's components.
