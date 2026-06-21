@@ -144,7 +144,8 @@ export const getSegments = () => {
                         JOIN 
                             stations s2 ON seg.station_id_2 = s2.id
                         JOIN 
-                            lines l ON seg.line_id = l.id;
+                            lines l ON seg.line_id = l.id
+                        ORDER BY RANDOM();
                         `
 
         db.all(query, (err, rows) => {
